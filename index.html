@@ -3,82 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Hal - Gym Dashboard V4</title>
+    <title>Panel de Monitoreo - GPT Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #0f172a; color: #f8fafc; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        .glass-panel { background: rgba(30, 41, 59, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 1rem; }
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        body { background-color: #09090b; color: #f8fafc; font-family: 'Outfit', sans-serif; }
+        .glass-card { background: rgba(24, 24, 27, 0.8); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; }
+        
+        /* FullCalendar Customization for Dark Theme */
+        .fc-theme-standard td, .fc-theme-standard th { border-color: rgba(255,255,255,0.1); }
+        .fc-theme-standard .fc-scrollgrid { border-color: rgba(255,255,255,0.1); border-radius: 8px; overflow: hidden; }
+        .fc .fc-toolbar-title { font-size: 1.25rem; font-weight: 700; color: #e2e8f0; }
+        .fc .fc-button-primary { background-color: #3b82f6 !important; border-color: #3b82f6 !important; border-radius: 8px; }
+        .fc .fc-button-primary:hover { background-color: #2563eb !important; border-color: #2563eb !important; }
+        .fc-day-today { background-color: rgba(59, 130, 246, 0.1) !important; }
+        .fc-event { border: none; padding: 3px; font-weight: 600; cursor: pointer; border-radius: 6px; }
+        
+        .custom-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body class="p-3 md:p-8 antialiased pb-20">
-    <div class="max-w-7xl mx-auto space-y-4 md:space-y-6">
+<body class="p-3 md:p-6 antialiased pb-20">
+    <div class="max-w-7xl mx-auto space-y-6">
         
-        <div class="text-center md:text-left pt-2 pb-4">
-            <h1 class="text-2xl md:text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 tracking-tight">
-                Dashboard V4 (Intensidad)
+        <!-- Header -->
+        <header class="text-center md:text-left py-4">
+            <h1 class="text-3xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 tracking-tight">
+                Panel de Monitoreo de Entrenamiento
             </h1>
-            <p class="text-slate-400 mt-1 font-medium text-xs md:text-base">Métricas de Fatiga (RIR), 1RM y Volumen</p>
-        </div>
+            <p class="text-slate-400 mt-2 font-medium">Motor IA: GPT-5 · Seguimiento Integral de Rutinas y Fuerza</p>
+        </header>
 
-        <div class="glass-panel p-3 shadow-xl sticky top-2 z-50">
-            <div class="flex flex-wrap md:flex-nowrap gap-1 bg-slate-800/80 p-1 rounded-lg border border-slate-700/50">
-                <button onclick="setMetric('onerm')" id="btn-metric-onerm" class="flex-1 min-w-[70px] py-2 rounded-md text-xs font-bold bg-purple-600 text-white shadow-lg transition-colors">1RM</button>
-                <button onclick="setMetric('volume')" id="btn-metric-volume" class="flex-1 min-w-[70px] py-2 rounded-md text-xs font-medium text-slate-400 hover:text-white transition-colors">Volumen</button>
-                <button onclick="setMetric('rir')" id="btn-metric-rir" class="flex-1 min-w-[70px] py-2 rounded-md text-xs font-medium text-slate-400 hover:text-white transition-colors flex items-center justify-center gap-1">
-                    Intensidad (RIR)
-                </button>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Calendario (Spans 1 col on Desktop) -->
+            <div class="glass-card p-5 shadow-2xl lg:col-span-1">
+                <h2 class="text-lg font-bold text-slate-200 mb-4 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    Calendario de Rutinas
+                </h2>
+                <div id="calendar" class="text-xs"></div>
             </div>
-        </div>
 
-        <div class="glass-panel p-3 md:p-6 shadow-xl">
-            <div class="h-[300px] md:h-[500px] w-full relative">
-                <canvas id="progressChart"></canvas>
-            </div>
-            <p id="chart-description" class="text-[10px] md:text-xs text-slate-400 mt-3 text-center px-4">
-                * 1RM (One Rep Max) es tu fuerza real teórica a 1 repetición (Fórmula de Epley).
-            </p>
-        </div>
+            <!-- Main Chart & Filters (Spans 2 cols) -->
+            <div class="glass-card p-5 shadow-2xl lg:col-span-2 flex flex-col">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
+                    <h2 class="text-lg font-bold text-slate-200 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                        Progresión de Fuerza
+                    </h2>
+                    <div class="flex gap-1 bg-zinc-900 p-1 rounded-lg border border-zinc-800">
+                        <button onclick="setMetric('onerm')" id="btn-metric-onerm" class="px-3 py-1.5 rounded text-xs font-bold bg-indigo-500 text-white shadow-lg transition-colors">1RM Est.</button>
+                        <button onclick="setMetric('weight')" id="btn-metric-weight" class="px-3 py-1.5 rounded text-xs font-medium text-slate-400 hover:text-white transition-colors">Kilos Brutos</button>
+                    </div>
+                </div>
 
-        <div class="glass-panel p-4 shadow-xl">
-            <div class="flex justify-between items-center mb-3">
-                <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Filtros</h2>
-                <div class="flex gap-2">
-                    <button onclick="clearAll()" class="text-[10px] px-2 py-1 rounded bg-slate-800 text-slate-400 border border-slate-700">Limpiar</button>
+                <!-- Filters -->
+                <div id="filter-container" class="flex gap-2 overflow-x-auto custom-scrollbar pb-3 whitespace-nowrap mb-2">
+                    <!-- Checkboxes injected via JS -->
+                </div>
+
+                <div class="h-[350px] w-full relative mt-2 flex-grow">
+                    <canvas id="progressChart"></canvas>
                 </div>
             </div>
-            <div id="filter-container" class="flex gap-2 overflow-x-auto hide-scrollbar pb-2 whitespace-nowrap">
-            </div>
+            
         </div>
 
-        <div class="glass-panel p-4 shadow-xl overflow-hidden">
-            <h2 class="text-sm font-bold text-slate-200 mb-3 uppercase tracking-wide flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-                Récords 1RM
+        <!-- Rutinas y Récords (Table) -->
+        <div class="glass-card p-5 shadow-2xl overflow-hidden">
+            <h2 class="text-lg font-bold text-slate-200 mb-4 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                Récords Históricos (PRs)
             </h2>
-            <div class="overflow-x-auto hide-scrollbar">
+            <div class="overflow-x-auto custom-scrollbar">
                 <table class="w-full text-left whitespace-nowrap">
-                    <tbody id="pr-table-body" class="divide-y divide-slate-800/60 text-xs">
+                    <thead class="bg-zinc-900/80">
+                        <tr class="text-xs uppercase tracking-wider text-slate-400">
+                            <th class="py-3 px-4 font-semibold rounded-tl-lg">Ejercicio</th>
+                            <th class="py-3 px-4 font-semibold text-right text-indigo-400">PR (1RM)</th>
+                            <th class="py-3 px-4 font-semibold text-right">Peso Bruto Max</th>
+                            <th class="py-3 px-4 font-semibold text-right rounded-tr-lg">Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pr-table-body" class="divide-y divide-zinc-800/60 text-sm">
+                        <!-- Rows injected here -->
                     </tbody>
                 </table>
             </div>
         </div>
+
     </div>
 
     <script>
-        const rawData = [{"date": "2026-03-09", "exercise": "Elevaciones laterales", "weight": 8.0, "onerm": 11.2, "volume": 288, "rir": null}, {"date": "2026-03-09", "exercise": "Press banca", "weight": 74.0, "onerm": 86.3, "volume": 1850, "rir": null}, {"date": "2026-03-09", "exercise": "Press cerrado", "weight": 22.0, "onerm": 27.9, "volume": 528, "rir": null}, {"date": "2026-03-09", "exercise": "Press militar mancuernas", "weight": 22.0, "onerm": 26.4, "volume": 528, "rir": null}, {"date": "2026-03-09", "exercise": "Remo mancuernas", "weight": 24.0, "onerm": 28.8, "volume": 432, "rir": null}, {"date": "2026-03-11", "exercise": "Prensa", "weight": 170.0, "onerm": 215.3, "volume": 4080, "rir": null}, {"date": "2026-03-11", "exercise": "Sentadilla", "weight": 100.0, "onerm": 116.7, "volume": 2400, "rir": null}, {"date": "2026-03-12", "exercise": "Curl b\u00edceps barra", "weight": 30.0, "onerm": 40.0, "volume": 900, "rir": null}, {"date": "2026-03-12", "exercise": "Curl martillo", "weight": 16.0, "onerm": 22.4, "volume": 576, "rir": null}, {"date": "2026-03-12", "exercise": "Extensi\u00f3n tr\u00edceps polea", "weight": 15.0, "onerm": 21.0, "volume": 540, "rir": null}, {"date": "2026-03-12", "exercise": "Press hombros con barra", "weight": 30.0, "onerm": 38.0, "volume": 960, "rir": null}, {"date": "2026-03-12", "exercise": "Putada", "weight": 3.0, "onerm": 4.0, "volume": 90, "rir": null}, {"date": "2026-03-12", "exercise": "P\u00e1jaros / Polea", "weight": 6.0, "onerm": 8.4, "volume": 288, "rir": null}, {"date": "2026-03-16", "exercise": "Elevaciones laterales", "weight": 8.0, "onerm": 11.2, "volume": 288, "rir": null}, {"date": "2026-03-16", "exercise": "Press banca", "weight": 74.0, "onerm": 86.3, "volume": 1850, "rir": null}, {"date": "2026-03-16", "exercise": "Press cerrado", "weight": 22.0, "onerm": 27.9, "volume": 528, "rir": null}, {"date": "2026-03-16", "exercise": "Press militar mancuernas", "weight": 22.0, "onerm": 26.4, "volume": 528, "rir": null}, {"date": "2026-03-16", "exercise": "Remo mancuernas", "weight": 24.0, "onerm": 28.8, "volume": 432, "rir": null}, {"date": "2026-03-17", "exercise": "Curl femoral", "weight": 60.0, "onerm": 80.0, "volume": 1800, "rir": null}, {"date": "2026-03-17", "exercise": "Prensa", "weight": 180.0, "onerm": 228.0, "volume": 4160, "rir": null}, {"date": "2026-03-17", "exercise": "Sentadilla", "weight": 100.0, "onerm": 116.7, "volume": 2425, "rir": null}, {"date": "2026-03-17", "exercise": "Zancadas", "weight": 14.0, "onerm": 17.7, "volume": 448, "rir": null}, {"date": "2026-03-18", "exercise": "Curl b\u00edceps barra", "weight": 30.0, "onerm": 40.0, "volume": 900, "rir": null}, {"date": "2026-03-18", "exercise": "Curl martillo", "weight": 18.0, "onerm": 25.2, "volume": 648, "rir": null}, {"date": "2026-03-18", "exercise": "M\u00e1quina de hombros", "weight": 70.0, "onerm": 93.3, "volume": 2100, "rir": null}, {"date": "2026-03-18", "exercise": "Press franc\u00e9s", "weight": 20.0, "onerm": 28.0, "volume": 720, "rir": null}, {"date": "2026-03-18", "exercise": "Press hombros con barra", "weight": 30.0, "onerm": 38.0, "volume": 960, "rir": null}, {"date": "2026-03-18", "exercise": "P\u00e1jaros / Polea", "weight": 6.0, "onerm": 8.4, "volume": 288, "rir": null}, {"date": "2026-03-23", "exercise": "Press banca", "weight": 80.0, "onerm": 93.3, "volume": 1520, "rir": null}, {"date": "2026-03-24", "exercise": "Prensa", "weight": 200.0, "onerm": 280.0, "volume": 9600, "rir": null}, {"date": "2026-03-24", "exercise": "Zancadas", "weight": 16.0, "onerm": 20.3, "volume": 512, "rir": null}, {"date": "2026-03-26", "exercise": "Aperturas", "weight": 8.0, "onerm": 12.0, "volume": 360, "rir": null}, {"date": "2026-03-26", "exercise": "Elevaciones Laterales", "weight": 8.0, "onerm": 12.0, "volume": 360, "rir": null}, {"date": "2026-03-26", "exercise": "Face pull", "weight": 15.0, "onerm": 22.5, "volume": 675, "rir": null}, {"date": "2026-03-26", "exercise": "Jal\u00f3n", "weight": 60.0, "onerm": 84.0, "volume": 2880, "rir": null}, {"date": "2026-03-26", "exercise": "Press inclinado", "weight": 22.0, "onerm": 30.8, "volume": 792, "rir": null}, {"date": "2026-03-26", "exercise": "Remo Polea", "weight": 60.0, "onerm": 84.0, "volume": 2160, "rir": null}, {"date": "2026-03-30", "exercise": "Aperturas mancuernas", "weight": 10.0, "onerm": 14.0, "volume": 360, "rir": null}, {"date": "2026-03-30", "exercise": "Jal\u00f3n al pecho", "weight": 60.0, "onerm": 76.0, "volume": 1920, "rir": null}, {"date": "2026-03-30", "exercise": "Press banca", "weight": 76.0, "onerm": 88.7, "volume": 1900, "rir": null}, {"date": "2026-04-13", "exercise": "Face pull", "weight": 20.0, "onerm": 28.0, "volume": 240, "rir": 3.0}, {"date": "2026-04-13", "exercise": "Press banca", "weight": 58.0, "onerm": 88.9, "volume": 3712, "rir": 0.0}, {"date": "2026-04-13", "exercise": "Press cerrado", "weight": 18.0, "onerm": 22.8, "volume": 576, "rir": 0.0}, {"date": "2026-04-13", "exercise": "Press inclinado", "weight": 50.0, "onerm": 70.0, "volume": 2400, "rir": 0.0}];
+        const chartData = [{"date": "2026-03-09", "exercise": "Elevaciones laterales", "weight": 8.0, "onerm": 11.2}, {"date": "2026-03-09", "exercise": "Press banca", "weight": 74.0, "onerm": 86.3}, {"date": "2026-03-09", "exercise": "Press cerrado", "weight": 22.0, "onerm": 27.9}, {"date": "2026-03-09", "exercise": "Press militar mancuernas", "weight": 22.0, "onerm": 26.4}, {"date": "2026-03-09", "exercise": "Remo mancuernas", "weight": 24.0, "onerm": 28.8}, {"date": "2026-03-11", "exercise": "Prensa", "weight": 170.0, "onerm": 215.3}, {"date": "2026-03-11", "exercise": "Sentadilla", "weight": 100.0, "onerm": 116.7}, {"date": "2026-03-12", "exercise": "Curl b\u00edceps barra", "weight": 30.0, "onerm": 40.0}, {"date": "2026-03-12", "exercise": "Curl martillo", "weight": 16.0, "onerm": 22.4}, {"date": "2026-03-12", "exercise": "Extensi\u00f3n tr\u00edceps polea", "weight": 15.0, "onerm": 21.0}, {"date": "2026-03-12", "exercise": "Press hombros con barra", "weight": 30.0, "onerm": 38.0}, {"date": "2026-03-12", "exercise": "Putada", "weight": 3.0, "onerm": 4.0}, {"date": "2026-03-12", "exercise": "P\u00e1jaros / Polea", "weight": 6.0, "onerm": 8.4}, {"date": "2026-03-16", "exercise": "Elevaciones laterales", "weight": 8.0, "onerm": 11.2}, {"date": "2026-03-16", "exercise": "Press banca", "weight": 74.0, "onerm": 86.3}, {"date": "2026-03-16", "exercise": "Press cerrado", "weight": 22.0, "onerm": 27.9}, {"date": "2026-03-16", "exercise": "Press militar mancuernas", "weight": 22.0, "onerm": 26.4}, {"date": "2026-03-16", "exercise": "Remo mancuernas", "weight": 24.0, "onerm": 28.8}, {"date": "2026-03-17", "exercise": "Curl femoral", "weight": 60.0, "onerm": 80.0}, {"date": "2026-03-17", "exercise": "Prensa", "weight": 180.0, "onerm": 228.0}, {"date": "2026-03-17", "exercise": "Sentadilla", "weight": 100.0, "onerm": 116.7}, {"date": "2026-03-17", "exercise": "Zancadas", "weight": 14.0, "onerm": 17.7}, {"date": "2026-03-18", "exercise": "Curl b\u00edceps barra", "weight": 30.0, "onerm": 40.0}, {"date": "2026-03-18", "exercise": "Curl martillo", "weight": 18.0, "onerm": 25.2}, {"date": "2026-03-18", "exercise": "M\u00e1quina de hombros", "weight": 70.0, "onerm": 93.3}, {"date": "2026-03-18", "exercise": "Press franc\u00e9s", "weight": 20.0, "onerm": 28.0}, {"date": "2026-03-18", "exercise": "Press hombros con barra", "weight": 30.0, "onerm": 38.0}, {"date": "2026-03-18", "exercise": "P\u00e1jaros / Polea", "weight": 6.0, "onerm": 8.4}, {"date": "2026-03-23", "exercise": "Press banca", "weight": 80.0, "onerm": 93.3}, {"date": "2026-03-24", "exercise": "Prensa", "weight": 200.0, "onerm": 280.0}, {"date": "2026-03-24", "exercise": "Zancadas", "weight": 16.0, "onerm": 20.3}, {"date": "2026-03-26", "exercise": "Aperturas", "weight": 8.0, "onerm": 12.0}, {"date": "2026-03-26", "exercise": "Elevaciones Laterales", "weight": 8.0, "onerm": 12.0}, {"date": "2026-03-26", "exercise": "Face pull", "weight": 15.0, "onerm": 22.5}, {"date": "2026-03-26", "exercise": "Jal\u00f3n", "weight": 60.0, "onerm": 84.0}, {"date": "2026-03-26", "exercise": "Press inclinado", "weight": 22.0, "onerm": 30.8}, {"date": "2026-03-26", "exercise": "Remo Polea", "weight": 60.0, "onerm": 84.0}, {"date": "2026-03-30", "exercise": "Aperturas mancuernas", "weight": 10.0, "onerm": 14.0}, {"date": "2026-03-30", "exercise": "Jal\u00f3n al pecho", "weight": 60.0, "onerm": 76.0}, {"date": "2026-03-30", "exercise": "Press banca", "weight": 76.0, "onerm": 88.7}, {"date": "2026-04-13", "exercise": "Face pull", "weight": 20.0, "onerm": 28.0}, {"date": "2026-04-13", "exercise": "Press banca", "weight": 58.0, "onerm": 88.9}, {"date": "2026-04-13", "exercise": "Press cerrado", "weight": 18.0, "onerm": 22.8}, {"date": "2026-04-13", "exercise": "Press inclinado", "weight": 50.0, "onerm": 70.0}];
+        const calendarData = [{"date": "2026-03-09", "routine": "D\u00eda 1 - Upper FUERZA"}, {"date": "2026-03-11", "routine": "D\u00eda 2 - Lower FUERZA"}, {"date": "2026-03-12", "routine": "D\u00eda 3 - HOMBROS + BRAZOS"}, {"date": "2026-03-16", "routine": "D\u00eda 1 - Upper FUERZA"}, {"date": "2026-03-17", "routine": "D\u00eda 2 - Lower FUERZA"}, {"date": "2026-03-18", "routine": "D\u00eda 3 - HOMBROS + BRAZOS"}, {"date": "2026-03-23", "routine": "D\u00eda 1 - Upper FUERZA"}, {"date": "2026-03-24", "routine": "D\u00eda 2 - Lower FUERZA"}, {"date": "2026-03-26", "routine": "D\u00eda 4 - Upper HIPERTROFIA"}, {"date": "2026-03-30", "routine": "D\u00eda 1 - Upper FUERZA"}, {"date": "2026-04-13", "routine": "D\u00eda 1 - Upper FUERZA"}];
+        
         let currentMetric = 'onerm';
 
-        const exercises = [...new Set(rawData.map(d => d.exercise))].sort();
-        const defaultSelected = ['Press banca', 'Press inclinado', 'Press cerrado', 'Remo en polea', 'Face pull'];
-        let selectedExercises = new Set();
-        exercises.forEach(e => { if(defaultSelected.includes(e)) selectedExercises.add(e); });
+        // Set up FullCalendar
+        document.addEventListener('DOMContentLoaded', function() {
+            const calendarEl = document.getElementById('calendar');
+            
+            // Map routines to colors
+            const routineColors = {
+                'Día 1 - Upper FUERZA': '#3b82f6', // blue
+                'Día 2 - Lower FUERZA': '#10b981', // emerald
+                'Día 3 - HOMBROS + BRAZOS': '#8b5cf6', // violet
+                'Día 4 - Upper HIPERTROFIA': '#f59e0b' // amber
+            };
+
+            const events = calendarData.map(d => ({
+                title: d.routine.replace('Día ', 'D'),
+                start: d.date,
+                backgroundColor: routineColors[d.routine] || '#6366f1',
+                allDay: true
+            }));
+
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: { left: 'prev,next', center: 'title', right: 'today' },
+                events: events,
+                height: 'auto',
+                firstDay: 1, // Lunes
+                locale: 'es'
+            });
+            calendar.render();
+        });
+
+        // Chart Logic
+        const exercises = [...new Set(chartData.map(d => d.exercise))].sort();
+        const defaultSelected = ['Press banca', 'Sentadilla', 'Prensa', 'Press militar mancuernas'];
+        let selectedExercises = new Set(exercises.filter(e => defaultSelected.includes(e)));
         if (selectedExercises.size === 0 && exercises.length > 0) selectedExercises.add(exercises[0]);
 
-        const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316', '#6366f1', '#0ea5e9'];
+        const colors = ['#818cf8', '#34d399', '#fbbf24', '#f87171', '#a78bfa', '#f472b6', '#2dd4bf', '#fb923c'];
         const colorMap = {};
         exercises.forEach((ex, i) => colorMap[ex] = colors[i % colors.length]);
 
@@ -92,12 +152,12 @@
                 const color = colorMap[ex];
                 
                 if (isActive) {
-                    btn.className = "flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold border shadow-md";
-                    btn.style.backgroundColor = color + '25';
+                    btn.className = "flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold border shadow-md transition-transform scale-105";
+                    btn.style.backgroundColor = color + '30';
                     btn.style.borderColor = color;
                     btn.style.color = color;
                 } else {
-                    btn.className = "flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium border bg-slate-800/80 border-slate-700 text-slate-500";
+                    btn.className = "flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium border bg-zinc-900 border-zinc-800 text-slate-500 hover:text-slate-300";
                 }
                 
                 btn.innerText = ex;
@@ -112,56 +172,33 @@
             renderFilters();
             updateChart();
         }
-        
-        function clearAll() {
-            selectedExercises.clear();
-            renderFilters();
-            updateChart();
-        }
 
         function setMetric(metric) {
             currentMetric = metric;
-            const btns = ['onerm', 'volume', 'rir'];
+            const btns = ['onerm', 'weight'];
             btns.forEach(m => {
                 const el = document.getElementById('btn-metric-' + m);
-                if (m === metric) el.className = "flex-1 min-w-[70px] py-2 rounded-md text-xs font-bold bg-purple-600 text-white shadow-lg transition-colors";
-                else el.className = "flex-1 min-w-[70px] py-2 rounded-md text-xs font-medium text-slate-400 hover:text-white transition-colors bg-transparent";
-                
-                if(m === 'rir' && metric === 'rir') el.classList.add('bg-red-600');
+                if (m === metric) el.className = "px-3 py-1.5 rounded text-xs font-bold bg-indigo-500 text-white shadow-lg transition-colors";
+                else el.className = "px-3 py-1.5 rounded text-xs font-medium text-slate-400 hover:text-white transition-colors bg-transparent";
             });
-
-            const desc = document.getElementById('chart-description');
-            if(metric === 'onerm') desc.innerHTML = "* 1RM (One Rep Max) es el peso máximo teórico a una repetición.";
-            else if(metric === 'volume') desc.innerHTML = "* Volumen Total: Kilos totales movidos (Series x Reps x Peso).";
-            else if(metric === 'rir') desc.innerHTML = "* RIR (Reps in Reserve): Un valor de 0 significa Fallo Muscular (Hipertrofia pura). Cuanto más arriba esté el punto (cerca de 0), más duro entrenaste.";
-
             updateChart();
         }
 
-        Chart.defaults.color = '#64748b';
-        Chart.defaults.font.family = 'Inter';
+        Chart.defaults.color = '#71717a';
+        Chart.defaults.font.family = 'Outfit';
         const ctx = document.getElementById('progressChart').getContext('2d');
         let chart;
 
         function updateChart() {
-            let dates = [...new Set(rawData.map(d => d.date))].sort();
-            
-            if (currentMetric === 'rir') {
-                const datesWithRir = new Set(rawData.filter(d => d.rir !== null).map(d => d.date));
-                dates = [...datesWithRir].sort();
-            }
-
+            const dates = [...new Set(chartData.map(d => d.date))].sort();
             const datasets = [];
             
             selectedExercises.forEach(ex => {
-                const exData = rawData.filter(d => d.exercise === ex);
+                const exData = chartData.filter(d => d.exercise === ex);
                 const dataPoints = dates.map(d => {
                     const point = exData.find(x => x.date === d);
                     if (!point) return null;
-                    if (currentMetric === 'onerm') return point.onerm;
-                    if (currentMetric === 'volume') return point.volume;
-                    if (currentMetric === 'rir') return point.rir !== null ? point.rir : null;
-                    return null;
+                    return currentMetric === 'onerm' ? point.onerm : point.weight;
                 });
 
                 datasets.push({
@@ -169,19 +206,17 @@
                     data: dataPoints,
                     borderColor: colorMap[ex],
                     backgroundColor: colorMap[ex],
-                    borderWidth: 2.5,
-                    pointRadius: currentMetric === 'rir' ? 6 : 3,
-                    pointHoverRadius: 8,
-                    pointBackgroundColor: currentMetric === 'rir' ? colorMap[ex] : '#0f172a',
+                    borderWidth: 3,
+                    pointRadius: 4,
+                    pointHoverRadius: 7,
+                    pointBackgroundColor: '#09090b',
                     pointBorderWidth: 2,
                     spanGaps: true,
-                    tension: 0.3
+                    tension: 0.4
                 });
             });
 
             if (chart) chart.destroy();
-
-            const isRir = currentMetric === 'rir';
 
             chart = new Chart(ctx, {
                 type: 'line',
@@ -193,45 +228,36 @@
                     plugins: {
                         legend: { display: false },
                         tooltip: {
-                            backgroundColor: 'rgba(15, 23, 42, 0.95)',
-                            titleFont: { size: 11 },
-                            bodyFont: { size: 12, weight: 'bold' },
-                            padding: 10,
-                            borderColor: 'rgba(51, 65, 85, 0.8)',
+                            backgroundColor: 'rgba(24, 24, 27, 0.95)',
+                            titleFont: { size: 12 },
+                            bodyFont: { size: 13, weight: 'bold' },
+                            padding: 12,
+                            borderColor: 'rgba(63, 63, 70, 0.8)',
                             borderWidth: 1,
                             cornerRadius: 8,
                             usePointStyle: true,
-                            boxPadding: 4,
-                            callbacks: { 
-                                label: (context) => {
-                                    if (currentMetric === 'rir') return ` ${context.dataset.label}: RIR ${context.parsed.y} (Al fallo)`
-                                    return ` ${context.dataset.label}: ${context.parsed.y}`
-                                }
-                            }
+                            callbacks: { label: (context) => ` ${context.dataset.label}: ${context.parsed.y} kg` }
                         }
                     },
                     scales: {
                         y: { 
-                            reverse: isRir,
-                            grid: { color: 'rgba(255, 255, 255, 0.05)', drawBorder: false },
-                            ticks: { padding: 5, maxTicksLimit: 6, font: { size: 10 }, stepSize: isRir ? 1 : undefined },
-                            min: isRir ? 0 : undefined,
-                            max: isRir ? 5 : undefined
+                            grid: { color: 'rgba(255, 255, 255, 0.03)', drawBorder: false },
+                            ticks: { padding: 8, font: { size: 11 } }
                         },
                         x: { 
                             grid: { display: false, drawBorder: false },
-                            ticks: { padding: 5, maxRotation: 45, minRotation: 45, font: { size: 10 } }
+                            ticks: { padding: 8, font: { size: 11 } }
                         }
                     }
                 }
             });
         }
 
-        function renderTableAndStats() {
+        function renderTable() {
             const tbody = document.getElementById('pr-table-body');
             const prs = {};
 
-            rawData.forEach(d => {
+            chartData.forEach(d => {
                 if (!prs[d.exercise] || d.onerm > prs[d.exercise].onerm) {
                     prs[d.exercise] = { onerm: d.onerm, weight: d.weight, date: d.date };
                 }
@@ -241,13 +267,15 @@
 
             sortedExercises.forEach(ex => {
                 const tr = document.createElement('tr');
+                tr.className = "hover:bg-zinc-800/40 transition-colors";
                 tr.innerHTML = `
-                    <td class="py-3 px-2 flex items-center gap-2">
+                    <td class="py-3.5 px-4 flex items-center gap-3">
                         <div class="w-2 h-2 rounded-full" style="background-color: ${colorMap[ex]}"></div>
-                        <span class="font-medium text-slate-300 truncate max-w-[120px]">${ex}</span>
+                        <span class="font-medium text-slate-300">${ex}</span>
                     </td>
-                    <td class="py-3 px-2 text-right font-bold text-purple-400">${prs[ex].onerm}</td>
-                    <td class="py-3 px-2 text-right text-slate-500 font-mono text-[10px]">${prs[ex].date.substring(5)}</td>
+                    <td class="py-3.5 px-4 text-right font-bold text-indigo-400">${prs[ex].onerm} kg</td>
+                    <td class="py-3.5 px-4 text-right text-slate-400">${prs[ex].weight} kg</td>
+                    <td class="py-3.5 px-4 text-right text-slate-500 font-mono text-xs">${prs[ex].date}</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -255,7 +283,7 @@
 
         renderFilters();
         updateChart();
-        renderTableAndStats();
+        renderTable();
     </script>
 </body>
 </html>
