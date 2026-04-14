@@ -9,10 +9,8 @@
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #09090b; color: #f8fafc; font-family: 'Inter', sans-serif; }
+        body { background-color: #09090b; color: #f8fafc; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
         .glass-card { background: rgba(24, 24, 27, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 16px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); }
-        
-        /* FullCalendar Customization */
         .fc-theme-standard td, .fc-theme-standard th { border-color: rgba(255,255,255,0.05); }
         .fc-theme-standard .fc-scrollgrid { border-color: rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden; }
         .fc .fc-toolbar-title { font-size: 1.1rem; font-weight: 700; color: #e2e8f0; }
@@ -21,10 +19,7 @@
         .fc-event { border: none; padding: 2px 4px; font-weight: 600; font-size: 0.7rem; border-radius: 4px; cursor: pointer; transition: transform 0.2s; }
         .fc-event:hover { transform: scale(1.05); }
         .fc-daygrid-day-number { font-size: 0.8rem; color: #94a3b8; padding: 4px; }
-        
         .hide-scrollbar::-webkit-scrollbar { display: none; }
-        
-        /* Modal Animation */
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .modal-overlay { animation: fadeIn 0.2s ease-out forwards; }
@@ -35,7 +30,6 @@
 
     <div class="max-w-7xl mx-auto space-y-6">
         
-        <!-- Header -->
         <header class="pb-2 border-b border-zinc-800">
             <h1 class="text-3xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-500 tracking-tight">
                 Centro de Entrenamiento
@@ -45,31 +39,25 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
-            <!-- Calendar Section (Spans 1 col) -->
             <div class="glass-card p-5 lg:col-span-1">
                 <h2 class="text-lg font-bold text-slate-200 mb-4 flex items-center gap-2">
-                    <svg class="w-5 h-5 text-indigo-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/></svg>
-                    Calendario (Click en un día)
+                    Calendario (Toca un día)
                 </h2>
                 <div id="calendar" class="w-full"></div>
             </div>
 
-            <!-- Chart Section (Spans 2 cols) -->
             <div class="glass-card p-5 lg:col-span-2 flex flex-col">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
                     <h2 class="text-lg font-bold text-slate-200 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-                        Progresión de Peso Real
+                        Progresión de Peso Bruto (Real)
                     </h2>
                     <div class="flex gap-2">
-                        <button onclick="selectAll()" class="text-[10px] px-3 py-1.5 rounded bg-zinc-800 hover:bg-zinc-700 text-slate-300 border border-zinc-700">Seleccionar Todo</button>
+                        <button onclick="selectAll()" class="text-[10px] px-3 py-1.5 rounded bg-zinc-800 hover:bg-zinc-700 text-slate-300 border border-zinc-700">Todos</button>
                         <button onclick="clearAll()" class="text-[10px] px-3 py-1.5 rounded bg-zinc-800 hover:bg-zinc-700 text-slate-300 border border-zinc-700">Limpiar</button>
                     </div>
                 </div>
 
-                <!-- Filters -->
                 <div id="filter-container" class="flex gap-2 overflow-x-auto hide-scrollbar pb-3 whitespace-nowrap mb-2">
-                    <!-- Checkboxes injected via JS -->
                 </div>
 
                 <div class="h-[300px] md:h-[400px] w-full relative mt-2 flex-grow">
@@ -79,24 +67,22 @@
             
         </div>
 
-        <!-- PR Table Section -->
         <div class="glass-card p-5 overflow-hidden">
             <h2 class="text-lg font-bold text-slate-200 mb-4 flex items-center gap-2">
-                <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.381z" clip-rule="evenodd"/></svg>
-                Tabla de Récords Personales (PRs)
+                <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                Récords Personales (PRs Reales)
             </h2>
             <div class="overflow-x-auto hide-scrollbar">
                 <table class="w-full text-left whitespace-nowrap">
                     <thead class="bg-zinc-900/50">
                         <tr class="text-xs uppercase tracking-wider text-slate-400">
                             <th class="py-3 px-4 font-semibold rounded-tl-lg">Ejercicio</th>
-                            <th class="py-3 px-4 font-semibold text-right text-emerald-400">PR Real (Peso Bruto)</th>
+                            <th class="py-3 px-4 font-semibold text-right text-emerald-400">PR Real (Peso)</th>
                             <th class="py-3 px-4 font-semibold text-right text-purple-400">1RM Teórico</th>
-                            <th class="py-3 px-4 font-semibold text-right rounded-tr-lg">Fecha del PR Real</th>
+                            <th class="py-3 px-4 font-semibold text-right rounded-tr-lg">Fecha</th>
                         </tr>
                     </thead>
                     <tbody id="pr-table-body" class="divide-y divide-zinc-800/50 text-sm">
-                        <!-- Rows injected here -->
                     </tbody>
                 </table>
             </div>
@@ -105,25 +91,24 @@
     </div>
 
     <!-- Day Details Modal -->
-    <div id="dayModal" class="fixed inset-0 z-50 hidden flex items-center justify-center px-4 modal-overlay bg-black/60 backdrop-blur-sm">
-        <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 w-full max-w-lg shadow-2xl modal-content max-h-[80vh] flex flex-col">
+    <div id="dayModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center px-4 modal-overlay bg-black/70 backdrop-blur-sm">
+        <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 w-full max-w-lg shadow-2xl modal-content max-h-[85vh] flex flex-col">
             <div class="flex justify-between items-center mb-4 border-b border-zinc-800 pb-3">
-                <h3 id="modalDateTitle" class="text-xl font-bold text-white">Detalles del Día</h3>
-                <button onclick="closeModal()" class="text-slate-400 hover:text-white p-1">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                <h3 id="modalDateTitle" class="text-lg md:text-xl font-bold text-white truncate pr-2">Detalles del Día</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-white p-2 rounded-full hover:bg-zinc-800 transition-colors">
+                    X
                 </button>
             </div>
-            <div id="modalContent" class="overflow-y-auto hide-scrollbar flex-grow space-y-4 pr-2">
-                <!-- Workout details injected here -->
+            <div id="modalContent" class="overflow-y-auto hide-scrollbar flex-grow space-y-4 pr-1">
             </div>
-            <div class="mt-4 pt-4 border-t border-zinc-800 text-right">
-                <button onclick="closeModal()" class="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg transition-colors">Cerrar</button>
+            <div class="mt-5 pt-4 border-t border-zinc-800">
+                <button onclick="closeModal()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-bold rounded-xl transition-colors shadow-lg">Cerrar</button>
             </div>
         </div>
     </div>
 
     <script>
-        const chartData = [{"Date": "2026-03-09", "Exercise": "Elevaciones laterales", "Max_Weight": 8.0, "Total_Volume": 288.0}, {"Date": "2026-03-09", "Exercise": "Press banca", "Max_Weight": 74.0, "Total_Volume": 1850.0}, {"Date": "2026-03-09", "Exercise": "Press cerrado", "Max_Weight": 22.0, "Total_Volume": 528.0}, {"Date": "2026-03-09", "Exercise": "Press militar mancuernas", "Max_Weight": 22.0, "Total_Volume": 528.0}, {"Date": "2026-03-09", "Exercise": "Remo mancuernas", "Max_Weight": 24.0, "Total_Volume": 432.0}, {"Date": "2026-03-11", "Exercise": "Prensa", "Max_Weight": 170.0, "Total_Volume": 4080.0}, {"Date": "2026-03-11", "Exercise": "Sentadilla", "Max_Weight": 100.0, "Total_Volume": 2400.0}, {"Date": "2026-03-12", "Exercise": "Curl b\u00edceps barra", "Max_Weight": 30.0, "Total_Volume": 900.0}, {"Date": "2026-03-12", "Exercise": "Curl martillo", "Max_Weight": 16.0, "Total_Volume": 576.0}, {"Date": "2026-03-12", "Exercise": "Extensi\u00f3n tr\u00edceps polea", "Max_Weight": 15.0, "Total_Volume": 540.0}, {"Date": "2026-03-12", "Exercise": "Press hombros con barra", "Max_Weight": 30.0, "Total_Volume": 960.0}, {"Date": "2026-03-12", "Exercise": "Putada", "Max_Weight": 3.0, "Total_Volume": 90.0}, {"Date": "2026-03-12", "Exercise": "P\u00e1jaros / Polea", "Max_Weight": 6.0, "Total_Volume": 288.0}, {"Date": "2026-03-16", "Exercise": "Elevaciones laterales", "Max_Weight": 8.0, "Total_Volume": 288.0}, {"Date": "2026-03-16", "Exercise": "Press banca", "Max_Weight": 74.0, "Total_Volume": 1850.0}, {"Date": "2026-03-16", "Exercise": "Press cerrado", "Max_Weight": 22.0, "Total_Volume": 528.0}, {"Date": "2026-03-16", "Exercise": "Press militar mancuernas", "Max_Weight": 22.0, "Total_Volume": 528.0}, {"Date": "2026-03-16", "Exercise": "Remo mancuernas", "Max_Weight": 24.0, "Total_Volume": 432.0}, {"Date": "2026-03-17", "Exercise": "Curl femoral", "Max_Weight": 60.0, "Total_Volume": 1800.0}, {"Date": "2026-03-17", "Exercise": "Prensa", "Max_Weight": 180.0, "Total_Volume": 4160.0}, {"Date": "2026-03-17", "Exercise": "Sentadilla", "Max_Weight": 100.0, "Total_Volume": 2425.0}, {"Date": "2026-03-17", "Exercise": "Zancadas", "Max_Weight": 14.0, "Total_Volume": 448.0}, {"Date": "2026-03-18", "Exercise": "Curl b\u00edceps barra", "Max_Weight": 30.0, "Total_Volume": 900.0}, {"Date": "2026-03-18", "Exercise": "Curl martillo", "Max_Weight": 18.0, "Total_Volume": 648.0}, {"Date": "2026-03-18", "Exercise": "M\u00e1quina de hombros", "Max_Weight": 70.0, "Total_Volume": 2100.0}, {"Date": "2026-03-18", "Exercise": "Press franc\u00e9s", "Max_Weight": 20.0, "Total_Volume": 720.0}, {"Date": "2026-03-18", "Exercise": "Press hombros con barra", "Max_Weight": 30.0, "Total_Volume": 960.0}, {"Date": "2026-03-18", "Exercise": "P\u00e1jaros / Polea", "Max_Weight": 6.0, "Total_Volume": 288.0}, {"Date": "2026-03-23", "Exercise": "Press banca", "Max_Weight": 80.0, "Total_Volume": 1520.0}, {"Date": "2026-03-24", "Exercise": "Prensa", "Max_Weight": 200.0, "Total_Volume": 9600.0}, {"Date": "2026-03-24", "Exercise": "Zancadas", "Max_Weight": 16.0, "Total_Volume": 512.0}, {"Date": "2026-03-26", "Exercise": "Aperturas", "Max_Weight": 8.0, "Total_Volume": 360.0}, {"Date": "2026-03-26", "Exercise": "Elevaciones Laterales", "Max_Weight": 8.0, "Total_Volume": 360.0}, {"Date": "2026-03-26", "Exercise": "Face pull", "Max_Weight": 15.0, "Total_Volume": 675.0}, {"Date": "2026-03-26", "Exercise": "Jal\u00f3n", "Max_Weight": 60.0, "Total_Volume": 2880.0}, {"Date": "2026-03-26", "Exercise": "Press inclinado", "Max_Weight": 22.0, "Total_Volume": 792.0}, {"Date": "2026-03-26", "Exercise": "Remo Polea", "Max_Weight": 60.0, "Total_Volume": 2160.0}, {"Date": "2026-03-30", "Exercise": "Aperturas mancuernas", "Max_Weight": 10.0, "Total_Volume": 360.0}, {"Date": "2026-03-30", "Exercise": "Jal\u00f3n al pecho", "Max_Weight": 60.0, "Total_Volume": 1920.0}, {"Date": "2026-03-30", "Exercise": "Press banca", "Max_Weight": 76.0, "Total_Volume": 1900.0}, {"Date": "2026-04-13", "Exercise": "Face pull", "Max_Weight": 20.0, "Total_Volume": 240.0}, {"Date": "2026-04-13", "Exercise": "Press banca", "Max_Weight": 58.0, "Total_Volume": 3712.0}, {"Date": "2026-04-13", "Exercise": "Press cerrado", "Max_Weight": 18.0, "Total_Volume": 576.0}, {"Date": "2026-04-13", "Exercise": "Press inclinado", "Max_Weight": 50.0, "Total_Volume": 2400.0}];
+        const chartData = [{"date": "2026-03-09", "exercise": "Elevaciones laterales", "weight": 8.0}, {"date": "2026-03-09", "exercise": "Press banca", "weight": 74.0}, {"date": "2026-03-09", "exercise": "Press cerrado", "weight": 22.0}, {"date": "2026-03-09", "exercise": "Press militar mancuernas", "weight": 22.0}, {"date": "2026-03-09", "exercise": "Remo mancuernas", "weight": 24.0}, {"date": "2026-03-11", "exercise": "Prensa", "weight": 170.0}, {"date": "2026-03-11", "exercise": "Sentadilla", "weight": 100.0}, {"date": "2026-03-12", "exercise": "Curl b\u00edceps barra", "weight": 30.0}, {"date": "2026-03-12", "exercise": "Curl martillo", "weight": 16.0}, {"date": "2026-03-12", "exercise": "Extensi\u00f3n tr\u00edceps polea", "weight": 15.0}, {"date": "2026-03-12", "exercise": "Press hombros con barra", "weight": 30.0}, {"date": "2026-03-12", "exercise": "Putada", "weight": 3.0}, {"date": "2026-03-12", "exercise": "P\u00e1jaros / Polea", "weight": 6.0}, {"date": "2026-03-16", "exercise": "Elevaciones laterales", "weight": 8.0}, {"date": "2026-03-16", "exercise": "Press banca", "weight": 74.0}, {"date": "2026-03-16", "exercise": "Press cerrado", "weight": 22.0}, {"date": "2026-03-16", "exercise": "Press militar mancuernas", "weight": 22.0}, {"date": "2026-03-16", "exercise": "Remo mancuernas", "weight": 24.0}, {"date": "2026-03-17", "exercise": "Curl femoral", "weight": 60.0}, {"date": "2026-03-17", "exercise": "Prensa", "weight": 180.0}, {"date": "2026-03-17", "exercise": "Sentadilla", "weight": 100.0}, {"date": "2026-03-17", "exercise": "Zancadas", "weight": 14.0}, {"date": "2026-03-18", "exercise": "Curl b\u00edceps barra", "weight": 30.0}, {"date": "2026-03-18", "exercise": "Curl martillo", "weight": 18.0}, {"date": "2026-03-18", "exercise": "M\u00e1quina de hombros", "weight": 70.0}, {"date": "2026-03-18", "exercise": "Press franc\u00e9s", "weight": 20.0}, {"date": "2026-03-18", "exercise": "Press hombros con barra", "weight": 30.0}, {"date": "2026-03-18", "exercise": "P\u00e1jaros / Polea", "weight": 6.0}, {"date": "2026-03-23", "exercise": "Press banca", "weight": 80.0}, {"date": "2026-03-24", "exercise": "Prensa", "weight": 200.0}, {"date": "2026-03-24", "exercise": "Zancadas", "weight": 16.0}, {"date": "2026-03-26", "exercise": "Aperturas", "weight": 8.0}, {"date": "2026-03-26", "exercise": "Elevaciones Laterales", "weight": 8.0}, {"date": "2026-03-26", "exercise": "Face pull", "weight": 15.0}, {"date": "2026-03-26", "exercise": "Jal\u00f3n", "weight": 60.0}, {"date": "2026-03-26", "exercise": "Press inclinado", "weight": 22.0}, {"date": "2026-03-26", "exercise": "Remo Polea", "weight": 60.0}, {"date": "2026-03-30", "exercise": "Aperturas mancuernas", "weight": 10.0}, {"date": "2026-03-30", "exercise": "Jal\u00f3n al pecho", "weight": 60.0}, {"date": "2026-03-30", "exercise": "Press banca", "weight": 76.0}, {"date": "2026-04-13", "exercise": "Face pull", "weight": 20.0}, {"date": "2026-04-13", "exercise": "Press banca", "weight": 58.0}, {"date": "2026-04-13", "exercise": "Press cerrado", "weight": 18.0}, {"date": "2026-04-13", "exercise": "Press inclinado", "weight": 50.0}];
         const calendarEvents = [{"date": "2026-03-09", "title": "D\u00eda 1 - Upper FUERZA"}, {"date": "2026-03-11", "title": "D\u00eda 2 - Lower FUERZA"}, {"date": "2026-03-12", "title": "D\u00eda 3 - HOMBROS + BRAZOS"}, {"date": "2026-03-16", "title": "D\u00eda 1 - Upper FUERZA"}, {"date": "2026-03-17", "title": "D\u00eda 2 - Lower FUERZA"}, {"date": "2026-03-18", "title": "D\u00eda 3 - HOMBROS + BRAZOS"}, {"date": "2026-03-23", "title": "D\u00eda 1 - Upper FUERZA"}, {"date": "2026-03-24", "title": "D\u00eda 2 - Lower FUERZA"}, {"date": "2026-03-26", "title": "D\u00eda 4 - Upper HIPERTROFIA"}, {"date": "2026-03-30", "title": "D\u00eda 1 - Upper FUERZA"}, {"date": "2026-04-13", "title": "D\u00eda 1 - Upper FUERZA"}];
         const detailsData = {"2026-03-09": [{"exercise": "Press banca", "set": 1, "reps": 5, "weight": 74.0}, {"exercise": "Press banca", "set": 2, "reps": 5, "weight": 74.0}, {"exercise": "Press banca", "set": 3, "reps": 5, "weight": 74.0}, {"exercise": "Press banca", "set": 4, "reps": 5, "weight": 74.0}, {"exercise": "Press banca", "set": 5, "reps": 5, "weight": 74.0}, {"exercise": "Press militar mancuernas", "set": 1, "reps": 6, "weight": 22.0}, {"exercise": "Press militar mancuernas", "set": 2, "reps": 6, "weight": 22.0}, {"exercise": "Press militar mancuernas", "set": 3, "reps": 6, "weight": 22.0}, {"exercise": "Press militar mancuernas", "set": 4, "reps": 6, "weight": 22.0}, {"exercise": "Remo mancuernas", "set": 1, "reps": 6, "weight": 24.0}, {"exercise": "Remo mancuernas", "set": 2, "reps": 6, "weight": 24.0}, {"exercise": "Remo mancuernas", "set": 3, "reps": 6, "weight": 24.0}, {"exercise": "Press cerrado", "set": 1, "reps": 8, "weight": 22.0}, {"exercise": "Press cerrado", "set": 2, "reps": 8, "weight": 22.0}, {"exercise": "Press cerrado", "set": 3, "reps": 8, "weight": 22.0}, {"exercise": "Elevaciones laterales", "set": 1, "reps": 12, "weight": 8.0}, {"exercise": "Elevaciones laterales", "set": 2, "reps": 12, "weight": 8.0}, {"exercise": "Elevaciones laterales", "set": 3, "reps": 12, "weight": 8.0}], "2026-03-11": [{"exercise": "Sentadilla", "set": 1, "reps": 5, "weight": 95.0}, {"exercise": "Sentadilla", "set": 2, "reps": 5, "weight": 95.0}, {"exercise": "Sentadilla", "set": 3, "reps": 5, "weight": 95.0}, {"exercise": "Sentadilla", "set": 4, "reps": 5, "weight": 95.0}, {"exercise": "Sentadilla", "set": 5, "reps": 5, "weight": 100.0}, {"exercise": "Prensa", "set": 1, "reps": 8, "weight": 170.0}, {"exercise": "Prensa", "set": 2, "reps": 8, "weight": 170.0}, {"exercise": "Prensa", "set": 3, "reps": 8, "weight": 170.0}], "2026-03-12": [{"exercise": "Press hombros con barra", "set": 1, "reps": 8, "weight": 30.0}, {"exercise": "Press hombros con barra", "set": 2, "reps": 8, "weight": 30.0}, {"exercise": "Press hombros con barra", "set": 3, "reps": 8, "weight": 30.0}, {"exercise": "Press hombros con barra", "set": 4, "reps": 8, "weight": 30.0}, {"exercise": "Putada", "set": 1, "reps": 10, "weight": 3.0}, {"exercise": "Putada", "set": 2, "reps": 10, "weight": 3.0}, {"exercise": "Putada", "set": 3, "reps": 10, "weight": 3.0}, {"exercise": "P\u00e1jaros / Polea", "set": 1, "reps": 12, "weight": 6.0}, {"exercise": "P\u00e1jaros / Polea", "set": 2, "reps": 12, "weight": 6.0}, {"exercise": "P\u00e1jaros / Polea", "set": 3, "reps": 12, "weight": 6.0}, {"exercise": "P\u00e1jaros / Polea", "set": 4, "reps": 12, "weight": 6.0}, {"exercise": "Curl b\u00edceps barra", "set": 1, "reps": 10, "weight": 30.0}, {"exercise": "Curl b\u00edceps barra", "set": 2, "reps": 10, "weight": 30.0}, {"exercise": "Curl b\u00edceps barra", "set": 3, "reps": 10, "weight": 30.0}, {"exercise": "Curl martillo", "set": 1, "reps": 12, "weight": 16.0}, {"exercise": "Curl martillo", "set": 2, "reps": 12, "weight": 16.0}, {"exercise": "Curl martillo", "set": 3, "reps": 12, "weight": 16.0}, {"exercise": "Extensi\u00f3n tr\u00edceps polea", "set": 1, "reps": 12, "weight": 15.0}, {"exercise": "Extensi\u00f3n tr\u00edceps polea", "set": 2, "reps": 12, "weight": 15.0}, {"exercise": "Extensi\u00f3n tr\u00edceps polea", "set": 3, "reps": 12, "weight": 15.0}], "2026-03-16": [{"exercise": "Press banca", "set": 1, "reps": 5, "weight": 74.0}, {"exercise": "Press banca", "set": 2, "reps": 5, "weight": 74.0}, {"exercise": "Press banca", "set": 3, "reps": 5, "weight": 74.0}, {"exercise": "Press banca", "set": 4, "reps": 5, "weight": 74.0}, {"exercise": "Press banca", "set": 5, "reps": 5, "weight": 74.0}, {"exercise": "Press militar mancuernas", "set": 1, "reps": 6, "weight": 22.0}, {"exercise": "Press militar mancuernas", "set": 2, "reps": 6, "weight": 22.0}, {"exercise": "Press militar mancuernas", "set": 3, "reps": 6, "weight": 22.0}, {"exercise": "Press militar mancuernas", "set": 4, "reps": 6, "weight": 22.0}, {"exercise": "Remo mancuernas", "set": 1, "reps": 6, "weight": 24.0}, {"exercise": "Remo mancuernas", "set": 2, "reps": 6, "weight": 24.0}, {"exercise": "Remo mancuernas", "set": 3, "reps": 6, "weight": 24.0}, {"exercise": "Press cerrado", "set": 1, "reps": 8, "weight": 22.0}, {"exercise": "Press cerrado", "set": 2, "reps": 8, "weight": 22.0}, {"exercise": "Press cerrado", "set": 3, "reps": 8, "weight": 22.0}, {"exercise": "Elevaciones laterales", "set": 1, "reps": 12, "weight": 8.0}, {"exercise": "Elevaciones laterales", "set": 2, "reps": 12, "weight": 8.0}, {"exercise": "Elevaciones laterales", "set": 3, "reps": 12, "weight": 8.0}], "2026-03-17": [{"exercise": "Sentadilla", "set": 1, "reps": 5, "weight": 95.0}, {"exercise": "Sentadilla", "set": 2, "reps": 5, "weight": 95.0}, {"exercise": "Sentadilla", "set": 3, "reps": 5, "weight": 95.0}, {"exercise": "Sentadilla", "set": 4, "reps": 5, "weight": 100.0}, {"exercise": "Sentadilla", "set": 5, "reps": 5, "weight": 100.0}, {"exercise": "Prensa", "set": 1, "reps": 8, "weight": 170.0}, {"exercise": "Prensa", "set": 2, "reps": 8, "weight": 170.0}, {"exercise": "Prensa", "set": 3, "reps": 8, "weight": 180.0}, {"exercise": "Zancadas", "set": 1, "reps": 8, "weight": 14.0}, {"exercise": "Zancadas", "set": 2, "reps": 8, "weight": 14.0}, {"exercise": "Zancadas", "set": 3, "reps": 8, "weight": 14.0}, {"exercise": "Zancadas", "set": 4, "reps": 8, "weight": 14.0}, {"exercise": "Curl femoral", "set": 1, "reps": 10, "weight": 60.0}, {"exercise": "Curl femoral", "set": 2, "reps": 10, "weight": 60.0}, {"exercise": "Curl femoral", "set": 3, "reps": 10, "weight": 60.0}], "2026-03-18": [{"exercise": "Press hombros con barra", "set": 1, "reps": 8, "weight": 30.0}, {"exercise": "Press hombros con barra", "set": 2, "reps": 8, "weight": 30.0}, {"exercise": "Press hombros con barra", "set": 3, "reps": 8, "weight": 30.0}, {"exercise": "Press hombros con barra", "set": 4, "reps": 8, "weight": 30.0}, {"exercise": "M\u00e1quina de hombros", "set": 1, "reps": 10, "weight": 70.0}, {"exercise": "M\u00e1quina de hombros", "set": 2, "reps": 10, "weight": 70.0}, {"exercise": "M\u00e1quina de hombros", "set": 3, "reps": 10, "weight": 70.0}, {"exercise": "P\u00e1jaros / Polea", "set": 1, "reps": 12, "weight": 6.0}, {"exercise": "P\u00e1jaros / Polea", "set": 2, "reps": 12, "weight": 6.0}, {"exercise": "P\u00e1jaros / Polea", "set": 3, "reps": 12, "weight": 6.0}, {"exercise": "P\u00e1jaros / Polea", "set": 4, "reps": 12, "weight": 6.0}, {"exercise": "Curl b\u00edceps barra", "set": 1, "reps": 10, "weight": 30.0}, {"exercise": "Curl b\u00edceps barra", "set": 2, "reps": 10, "weight": 30.0}, {"exercise": "Curl b\u00edceps barra", "set": 3, "reps": 10, "weight": 30.0}, {"exercise": "Curl martillo", "set": 1, "reps": 12, "weight": 18.0}, {"exercise": "Curl martillo", "set": 2, "reps": 12, "weight": 18.0}, {"exercise": "Curl martillo", "set": 3, "reps": 12, "weight": 18.0}, {"exercise": "Press franc\u00e9s", "set": 1, "reps": 12, "weight": 20.0}, {"exercise": "Press franc\u00e9s", "set": 2, "reps": 12, "weight": 20.0}, {"exercise": "Press franc\u00e9s", "set": 3, "reps": 12, "weight": 20.0}], "2026-03-23": [{"exercise": "Press banca", "set": 1, "reps": 3, "weight": 80.0}, {"exercise": "Press banca", "set": 2, "reps": 3, "weight": 80.0}, {"exercise": "Press banca", "set": 3, "reps": 3, "weight": 80.0}, {"exercise": "Press banca", "set": 4, "reps": 5, "weight": 80.0}, {"exercise": "Press banca", "set": 5, "reps": 5, "weight": 80.0}], "2026-03-24": [{"exercise": "Prensa", "set": 1, "reps": 12, "weight": 200.0}, {"exercise": "Prensa", "set": 2, "reps": 12, "weight": 200.0}, {"exercise": "Prensa", "set": 3, "reps": 12, "weight": 200.0}, {"exercise": "Prensa", "set": 4, "reps": 12, "weight": 200.0}, {"exercise": "Zancadas", "set": 1, "reps": 8, "weight": 16.0}, {"exercise": "Zancadas", "set": 2, "reps": 8, "weight": 16.0}, {"exercise": "Zancadas", "set": 3, "reps": 8, "weight": 16.0}, {"exercise": "Zancadas", "set": 4, "reps": 8, "weight": 16.0}], "2026-03-26": [{"exercise": "Jal\u00f3n", "set": 1, "reps": 12, "weight": 60.0}, {"exercise": "Jal\u00f3n", "set": 2, "reps": 12, "weight": 60.0}, {"exercise": "Jal\u00f3n", "set": 3, "reps": 12, "weight": 60.0}, {"exercise": "Jal\u00f3n", "set": 4, "reps": 12, "weight": 60.0}, {"exercise": "Remo Polea", "set": 1, "reps": 12, "weight": 60.0}, {"exercise": "Remo Polea", "set": 2, "reps": 12, "weight": 60.0}, {"exercise": "Remo Polea", "set": 3, "reps": 12, "weight": 60.0}, {"exercise": "Press inclinado", "set": 1, "reps": 12, "weight": 22.0}, {"exercise": "Press inclinado", "set": 2, "reps": 12, "weight": 22.0}, {"exercise": "Press inclinado", "set": 3, "reps": 12, "weight": 22.0}, {"exercise": "Aperturas", "set": 1, "reps": 15, "weight": 8.0}, {"exercise": "Aperturas", "set": 2, "reps": 15, "weight": 8.0}, {"exercise": "Aperturas", "set": 3, "reps": 15, "weight": 8.0}, {"exercise": "Elevaciones Laterales", "set": 1, "reps": 15, "weight": 8.0}, {"exercise": "Elevaciones Laterales", "set": 2, "reps": 15, "weight": 8.0}, {"exercise": "Elevaciones Laterales", "set": 3, "reps": 15, "weight": 8.0}, {"exercise": "Face pull", "set": 1, "reps": 15, "weight": 15.0}, {"exercise": "Face pull", "set": 2, "reps": 15, "weight": 15.0}, {"exercise": "Face pull", "set": 3, "reps": 15, "weight": 15.0}], "2026-03-30": [{"exercise": "Press banca", "set": 1, "reps": 5, "weight": 76.0}, {"exercise": "Press banca", "set": 2, "reps": 5, "weight": 76.0}, {"exercise": "Press banca", "set": 3, "reps": 5, "weight": 76.0}, {"exercise": "Press banca", "set": 4, "reps": 5, "weight": 76.0}, {"exercise": "Press banca", "set": 5, "reps": 5, "weight": 76.0}, {"exercise": "Aperturas mancuernas", "set": 1, "reps": 12, "weight": 10.0}, {"exercise": "Aperturas mancuernas", "set": 2, "reps": 12, "weight": 10.0}, {"exercise": "Aperturas mancuernas", "set": 3, "reps": 12, "weight": 10.0}, {"exercise": "Jal\u00f3n al pecho", "set": 1, "reps": 8, "weight": 60.0}, {"exercise": "Jal\u00f3n al pecho", "set": 2, "reps": 8, "weight": 60.0}, {"exercise": "Jal\u00f3n al pecho", "set": 3, "reps": 8, "weight": 60.0}, {"exercise": "Jal\u00f3n al pecho", "set": 4, "reps": 8, "weight": 60.0}], "2026-04-13": [{"exercise": "Press banca", "set": 1, "reps": 16, "weight": 58.0}, {"exercise": "Press banca", "set": 2, "reps": 16, "weight": 58.0}, {"exercise": "Press banca", "set": 3, "reps": 16, "weight": 58.0}, {"exercise": "Press banca", "set": 4, "reps": 16, "weight": 58.0}, {"exercise": "Press inclinado", "set": 1, "reps": 12, "weight": 50.0}, {"exercise": "Press inclinado", "set": 2, "reps": 12, "weight": 50.0}, {"exercise": "Press inclinado", "set": 3, "reps": 12, "weight": 50.0}, {"exercise": "Press inclinado", "set": 4, "reps": 12, "weight": 50.0}, {"exercise": "Press cerrado", "set": 1, "reps": 8, "weight": 18.0}, {"exercise": "Press cerrado", "set": 2, "reps": 8, "weight": 18.0}, {"exercise": "Press cerrado", "set": 3, "reps": 8, "weight": 18.0}, {"exercise": "Press cerrado", "set": 4, "reps": 8, "weight": 18.0}, {"exercise": "Face pull", "set": 4, "reps": 12, "weight": 20.0}]};
         const prData = [{"exercise": "Prensa", "real_pr_weight": 200.0, "real_pr_reps": 12, "real_pr_date": "2026-03-24", "est_1rm": 280.0}, {"exercise": "Sentadilla", "real_pr_weight": 100.0, "real_pr_reps": 5, "real_pr_date": "2026-03-11", "est_1rm": 116.7}, {"exercise": "Press banca", "real_pr_weight": 80.0, "real_pr_reps": 3, "real_pr_date": "2026-03-23", "est_1rm": 93.3}, {"exercise": "M\u00e1quina de hombros", "real_pr_weight": 70.0, "real_pr_reps": 10, "real_pr_date": "2026-03-18", "est_1rm": 93.3}, {"exercise": "Curl femoral", "real_pr_weight": 60.0, "real_pr_reps": 10, "real_pr_date": "2026-03-17", "est_1rm": 80.0}, {"exercise": "Jal\u00f3n", "real_pr_weight": 60.0, "real_pr_reps": 12, "real_pr_date": "2026-03-26", "est_1rm": 84.0}, {"exercise": "Jal\u00f3n al pecho", "real_pr_weight": 60.0, "real_pr_reps": 8, "real_pr_date": "2026-03-30", "est_1rm": 76.0}, {"exercise": "Remo Polea", "real_pr_weight": 60.0, "real_pr_reps": 12, "real_pr_date": "2026-03-26", "est_1rm": 84.0}, {"exercise": "Press inclinado", "real_pr_weight": 50.0, "real_pr_reps": 12, "real_pr_date": "2026-04-13", "est_1rm": 70.0}, {"exercise": "Curl b\u00edceps barra", "real_pr_weight": 30.0, "real_pr_reps": 10, "real_pr_date": "2026-03-12", "est_1rm": 40.0}, {"exercise": "Press hombros con barra", "real_pr_weight": 30.0, "real_pr_reps": 8, "real_pr_date": "2026-03-12", "est_1rm": 38.0}, {"exercise": "Remo mancuernas", "real_pr_weight": 24.0, "real_pr_reps": 6, "real_pr_date": "2026-03-09", "est_1rm": 28.8}, {"exercise": "Press cerrado", "real_pr_weight": 22.0, "real_pr_reps": 8, "real_pr_date": "2026-03-09", "est_1rm": 27.9}, {"exercise": "Press militar mancuernas", "real_pr_weight": 22.0, "real_pr_reps": 6, "real_pr_date": "2026-03-09", "est_1rm": 26.4}, {"exercise": "Face pull", "real_pr_weight": 20.0, "real_pr_reps": 12, "real_pr_date": "2026-04-13", "est_1rm": 28.0}, {"exercise": "Press franc\u00e9s", "real_pr_weight": 20.0, "real_pr_reps": 12, "real_pr_date": "2026-03-18", "est_1rm": 28.0}, {"exercise": "Curl martillo", "real_pr_weight": 18.0, "real_pr_reps": 12, "real_pr_date": "2026-03-18", "est_1rm": 25.2}, {"exercise": "Zancadas", "real_pr_weight": 16.0, "real_pr_reps": 8, "real_pr_date": "2026-03-24", "est_1rm": 20.3}, {"exercise": "Extensi\u00f3n tr\u00edceps polea", "real_pr_weight": 15.0, "real_pr_reps": 12, "real_pr_date": "2026-03-12", "est_1rm": 21.0}, {"exercise": "Aperturas mancuernas", "real_pr_weight": 10.0, "real_pr_reps": 12, "real_pr_date": "2026-03-30", "est_1rm": 14.0}, {"exercise": "Aperturas", "real_pr_weight": 8.0, "real_pr_reps": 15, "real_pr_date": "2026-03-26", "est_1rm": 12.0}, {"exercise": "Elevaciones Laterales", "real_pr_weight": 8.0, "real_pr_reps": 15, "real_pr_date": "2026-03-26", "est_1rm": 12.0}, {"exercise": "Elevaciones laterales", "real_pr_weight": 8.0, "real_pr_reps": 12, "real_pr_date": "2026-03-09", "est_1rm": 11.2}, {"exercise": "P\u00e1jaros / Polea", "real_pr_weight": 6.0, "real_pr_reps": 12, "real_pr_date": "2026-03-12", "est_1rm": 8.4}, {"exercise": "Putada", "real_pr_weight": 3.0, "real_pr_reps": 10, "real_pr_date": "2026-03-12", "est_1rm": 4.0}];
@@ -131,26 +116,23 @@
         // --- CALENDAR LOGIC ---
         document.addEventListener('DOMContentLoaded', function() {
             const calendarEl = document.getElementById('calendar');
-            
             const routineColors = {
-                'Día 1 - Upper FUERZA': '#3b82f6', // blue
-                'Día 2 - Lower FUERZA': '#10b981', // emerald
-                'Día 3 - HOMBROS + BRAZOS': '#8b5cf6', // violet
-                'Día 4 - Upper HIPERTROFIA': '#f59e0b' // amber
+                'Día 1 - Upper FUERZA': '#3b82f6', 
+                'Día 2 - Lower FUERZA': '#10b981', 
+                'Día 3 - HOMBROS + BRAZOS': '#8b5cf6', 
+                'Día 4 - Upper HIPERTROFIA': '#f59e0b' 
             };
-
             const events = calendarEvents.map(e => ({
                 title: e.title.replace('Día ', 'D'),
                 start: e.date,
                 backgroundColor: routineColors[e.title] || '#6366f1'
             }));
-
             const calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 headerToolbar: { left: 'prev,next', center: 'title', right: '' },
                 events: events,
                 height: 'auto',
-                firstDay: 1, // Lunes
+                firstDay: 1, 
                 locale: 'es',
                 eventClick: function(info) {
                     openModal(info.event.startStr, info.event.title);
@@ -164,42 +146,42 @@
             document.getElementById('modalDateTitle').innerText = dateStr + " | " + routineName;
             const content = document.getElementById('modalContent');
             content.innerHTML = '';
-
             const logs = detailsData[dateStr];
             if (!logs || logs.length === 0) {
-                content.innerHTML = '<p class="text-slate-400 italic">No hay detalles registrados para este día.</p>';
+                content.innerHTML = '<p class="text-slate-400 italic text-center py-4">No hay detalles registrados para este día.</p>';
             } else {
-                // Group logs by exercise for cleaner display
                 const grouped = {};
                 logs.forEach(log => {
                     if (!grouped[log.exercise]) grouped[log.exercise] = [];
                     grouped[log.exercise].push(log);
                 });
-
                 for (const [exercise, sets] of Object.entries(grouped)) {
-                    let html = `<div class="bg-zinc-800/50 p-3 rounded-xl border border-zinc-700/50">
-                                    <h4 class="font-bold text-blue-400 mb-2">${exercise}</h4>
-                                    <div class="space-y-1">`;
-                    
+                    let html = `<div class="bg-zinc-800/40 p-4 rounded-xl border border-zinc-700/50 shadow-sm">
+                                    <h4 class="font-bold text-indigo-400 mb-3 flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>${exercise}
+                                    </h4>
+                                    <div class="space-y-1.5">`;
                     sets.sort((a,b) => a.set - b.set).forEach(s => {
-                        html += `<div class="flex justify-between text-sm text-slate-300 bg-zinc-900/50 px-3 py-1.5 rounded">
-                                    <span>Serie ${s.set}</span>
-                                    <span class="font-mono">${s.reps} reps <span class="text-slate-500 mx-1">x</span> <span class="font-bold text-white">${s.weight} kg</span></span>
+                        html += `<div class="flex justify-between items-center text-sm text-slate-300 bg-zinc-900/60 px-4 py-2 rounded-lg">
+                                    <span class="text-slate-500 font-medium">Serie ${s.set}</span>
+                                    <span class="font-mono bg-zinc-800 px-2 py-0.5 rounded text-white shadow-inner">
+                                        ${s.reps} <span class="text-slate-500 text-xs">x</span> ${s.weight} kg
+                                    </span>
                                  </div>`;
                     });
                     html += `</div></div>`;
                     content.innerHTML += html;
                 }
             }
-
             document.getElementById('dayModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; 
         }
 
         function closeModal() {
             document.getElementById('dayModal').classList.add('hidden');
+            document.body.style.overflow = '';
         }
 
-        // Close modal on outside click
         document.getElementById('dayModal').addEventListener('click', function(e) {
             if (e.target === this) closeModal();
         });
@@ -215,23 +197,20 @@
         exercises.forEach((ex, i) => colorMap[ex] = colors[i % colors.length]);
 
         const filterContainer = document.getElementById('filter-container');
-        
         function renderFilters() {
             filterContainer.innerHTML = '';
             exercises.forEach(ex => {
                 const btn = document.createElement('button');
                 const isActive = selectedExercises.has(ex);
                 const color = colorMap[ex];
-                
                 if (isActive) {
-                    btn.className = "flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold border shadow-md";
+                    btn.className = "flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold border shadow-md transition-transform active:scale-95";
                     btn.style.backgroundColor = color + '25';
                     btn.style.borderColor = color;
                     btn.style.color = color;
                 } else {
-                    btn.className = "flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium border bg-zinc-900 border-zinc-800 text-slate-500";
+                    btn.className = "flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium border bg-zinc-900 border-zinc-800 text-slate-500 transition-colors hover:bg-zinc-800";
                 }
-                
                 btn.innerText = ex;
                 btn.onclick = () => toggleExercise(ex);
                 filterContainer.appendChild(btn);
@@ -271,7 +250,7 @@
                     backgroundColor: colorMap[ex],
                     borderWidth: 3,
                     pointRadius: 4,
-                    pointHoverRadius: 7,
+                    pointHoverRadius: 8,
                     pointBackgroundColor: '#09090b',
                     pointBorderWidth: 2,
                     spanGaps: true,
@@ -299,14 +278,14 @@
                             borderWidth: 1,
                             cornerRadius: 8,
                             usePointStyle: true,
-                            callbacks: { label: (context) => ` ${context.dataset.label}: ${context.parsed.y} kg (Real)` }
+                            callbacks: { label: (context) => ` ${context.dataset.label}: ${context.parsed.y} kg` }
                         }
                     },
                     scales: {
                         y: { 
                             grid: { color: 'rgba(255, 255, 255, 0.03)', drawBorder: false },
                             ticks: { padding: 8, font: { size: 11 } },
-                            title: { display: true, text: 'Peso Máximo Real (kg)', color: '#71717a', font: { size: 10, weight: 'bold' } }
+                            title: { display: true, text: 'Kilos Brutos', color: '#71717a', font: { size: 10, weight: 'bold' } }
                         },
                         x: { 
                             grid: { display: false, drawBorder: false },
@@ -343,7 +322,6 @@
             });
         }
 
-        // Init
         renderFilters();
         updateChart();
         renderPRTable();
