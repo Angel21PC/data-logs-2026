@@ -270,8 +270,7 @@
                 // Line Chart (Weight)
                 const weightPoints = dates.map(d => {
                     const point = exData.find(x => x.date === d);
-                    // Pass the whole object to access 'reps' in tooltip
-                    return point ? { x: d.substring(5), y: point.weight, reps: point.reps } : null;
+                    return point ? point.weight : null;
                 });
 
                 lineDatasets.push({
@@ -308,7 +307,7 @@
             // 1. LINE CHART (WEIGHT + REPS TOOLTIP)
             lineChart = new Chart(document.getElementById('progressChart').getContext('2d'), {
                 type: 'line',
-                data: { datasets: lineDatasets },
+                data: { labels: dates.map(d => d.substring(5)), datasets: lineDatasets },
                 options: {
                     responsive: true, maintainAspectRatio: false,
                     plugins: {
@@ -321,7 +320,10 @@
                             callbacks: { 
                                 // THIS IS THE MAGIC: Shows Weight + Reps
                                 label: (context) => {
-                                    const reps = context.raw.reps;
+                                    const dateLabel = dates[context.dataIndex];
+                                    const exLabel = context.dataset.label;
+                                    const point = chartData.find(d => d.date === dateLabel && d.exercise === exLabel);
+                                    const reps = point ? point.reps : "?";
                                     return ` ${context.dataset.label}: ${context.parsed.y} kg (x${reps} reps)`;
                                 }
                             }
