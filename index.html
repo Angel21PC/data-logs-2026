@@ -11,8 +11,6 @@
     <style>
         body { background-color: #09090b; color: #f8fafc; font-family: 'Outfit', sans-serif; -webkit-tap-highlight-color: transparent; }
         .glass-card { background: rgba(24, 24, 27, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); }
-        
-        /* FullCalendar Customization */
         .fc-theme-standard td, .fc-theme-standard th { border-color: rgba(255,255,255,0.05); }
         .fc-theme-standard .fc-scrollgrid { border-color: rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden; }
         .fc .fc-toolbar-title { font-size: 1rem; font-weight: 700; color: #e2e8f0; }
@@ -20,20 +18,15 @@
         .fc-day-today { background-color: rgba(59, 130, 246, 0.1) !important; }
         .fc-event { border: none; padding: 2px; font-weight: 600; font-size: 0.65rem; border-radius: 4px; cursor: pointer; }
         .fc-daygrid-day-number { font-size: 0.75rem; color: #94a3b8; padding: 2px; }
-        
         .hide-scrollbar::-webkit-scrollbar { display: none; }
-        
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .animate-slide-up { animation: slideUp 0.3s ease-out forwards; }
-        
-        /* Mobile Tabs */
         .tab-btn.active { border-bottom: 2px solid #6366f1; color: #e2e8f0; font-weight: 700; }
         .tab-btn { color: #64748b; padding-bottom: 6px; transition: all 0.2s; }
     </style>
 </head>
 <body class="antialiased pb-24">
 
-    <!-- Sticky Header & Mobile Tabs -->
     <div class="sticky top-0 z-40 bg-[#09090b]/90 backdrop-blur-lg border-b border-zinc-800 pt-4 px-4 shadow-md">
         <h1 class="text-2xl md:text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400 tracking-tight">
             Mi Progreso (V5)
@@ -46,22 +39,15 @@
     </div>
 
     <div class="max-w-4xl mx-auto p-4 space-y-6 mt-2">
-
-        <!-- TAB: GRÁFICAS -->
         <div id="tab-graficas" class="animate-slide-up">
-            
-            <!-- Filters -->
             <div class="glass-card p-4 mb-6">
                 <div class="flex justify-between items-center mb-3">
                     <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Filtros Activos</h2>
                     <button onclick="clearAll()" class="text-[10px] px-2 py-1 rounded bg-zinc-800 text-slate-400 border border-zinc-700">Limpiar</button>
                 </div>
-                <div id="filter-container" class="flex gap-2 overflow-x-auto hide-scrollbar pb-2 whitespace-nowrap">
-                    <!-- Checkboxes injected via JS -->
-                </div>
+                <div id="filter-container" class="flex gap-2 overflow-x-auto hide-scrollbar pb-2 whitespace-nowrap"></div>
             </div>
 
-            <!-- Chart 1: Weight & Reps -->
             <div class="glass-card p-4 mb-6">
                 <h2 class="text-sm font-bold text-slate-200 mb-2 flex items-center gap-2">
                     <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
@@ -73,7 +59,6 @@
                 </div>
             </div>
 
-            <!-- Chart 2: Volume (NEW) -->
             <div class="glass-card p-4">
                 <h2 class="text-sm font-bold text-slate-200 mb-2 flex items-center gap-2">
                     <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
@@ -84,10 +69,8 @@
                     <canvas id="volumeChart"></canvas>
                 </div>
             </div>
-
         </div>
 
-        <!-- TAB: CALENDARIO -->
         <div id="tab-calendario" class="hidden animate-slide-up">
             <div class="glass-card p-3">
                 <p class="text-[10px] text-slate-400 mb-2 text-center">Toca cualquier día pintado para ver el detalle de series y pesos.</p>
@@ -95,28 +78,19 @@
             </div>
         </div>
 
-        <!-- TAB: RÉCORDS (CARDS INSTEAD OF TABLE) -->
         <div id="tab-records" class="hidden animate-slide-up space-y-3">
             <p class="text-xs text-slate-400 px-2 mb-2">Aquí tienes tus PRs reales (lo máximo que has llegado a cargar en la barra), listados como tarjetas individuales.</p>
-            <div id="pr-cards-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <!-- Cards injected here -->
-            </div>
+            <div id="pr-cards-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
         </div>
-
     </div>
 
-    <!-- Day Details Modal -->
     <div id="dayModal" class="fixed inset-0 z-50 hidden flex items-end justify-center sm:items-center modal-overlay bg-black/80 backdrop-blur-sm">
         <div class="bg-zinc-900 rounded-t-3xl sm:rounded-2xl p-5 w-full max-w-lg shadow-2xl modal-content max-h-[85vh] flex flex-col border-t border-zinc-800">
             <div class="flex justify-between items-center mb-4 pb-2 border-b border-zinc-800">
                 <h3 id="modalDateTitle" class="text-lg font-bold text-white truncate pr-2">Detalles del Día</h3>
-                <button onclick="closeModal()" class="bg-zinc-800 text-slate-300 hover:text-white p-2 rounded-full transition-colors">
-                    X
-                </button>
+                <button onclick="closeModal()" class="bg-zinc-800 text-slate-300 hover:text-white p-2 rounded-full transition-colors">X</button>
             </div>
-            <div id="modalContent" class="overflow-y-auto hide-scrollbar flex-grow space-y-3 pr-1 pb-4">
-                <!-- Workout details injected here -->
-            </div>
+            <div id="modalContent" class="overflow-y-auto hide-scrollbar flex-grow space-y-3 pr-1 pb-4"></div>
         </div>
     </div>
 
@@ -126,7 +100,6 @@
         const detailsData = {"2026-03-09": [{"exercise": "Press banca", "set": 1, "reps": 5, "weight": 74.0}, {"exercise": "Press banca", "set": 2, "reps": 5, "weight": 74.0}, {"exercise": "Press banca", "set": 3, "reps": 5, "weight": 74.0}, {"exercise": "Press banca", "set": 4, "reps": 5, "weight": 74.0}, {"exercise": "Press banca", "set": 5, "reps": 5, "weight": 74.0}, {"exercise": "Press militar mancuernas", "set": 1, "reps": 6, "weight": 22.0}, {"exercise": "Press militar mancuernas", "set": 2, "reps": 6, "weight": 22.0}, {"exercise": "Press militar mancuernas", "set": 3, "reps": 6, "weight": 22.0}, {"exercise": "Press militar mancuernas", "set": 4, "reps": 6, "weight": 22.0}, {"exercise": "Remo mancuernas", "set": 1, "reps": 6, "weight": 24.0}, {"exercise": "Remo mancuernas", "set": 2, "reps": 6, "weight": 24.0}, {"exercise": "Remo mancuernas", "set": 3, "reps": 6, "weight": 24.0}, {"exercise": "Press cerrado", "set": 1, "reps": 8, "weight": 22.0}, {"exercise": "Press cerrado", "set": 2, "reps": 8, "weight": 22.0}, {"exercise": "Press cerrado", "set": 3, "reps": 8, "weight": 22.0}, {"exercise": "Elevaciones laterales", "set": 1, "reps": 12, "weight": 8.0}, {"exercise": "Elevaciones laterales", "set": 2, "reps": 12, "weight": 8.0}, {"exercise": "Elevaciones laterales", "set": 3, "reps": 12, "weight": 8.0}], "2026-03-11": [{"exercise": "Sentadilla", "set": 1, "reps": 5, "weight": 95.0}, {"exercise": "Sentadilla", "set": 2, "reps": 5, "weight": 95.0}, {"exercise": "Sentadilla", "set": 3, "reps": 5, "weight": 95.0}, {"exercise": "Sentadilla", "set": 4, "reps": 5, "weight": 95.0}, {"exercise": "Sentadilla", "set": 5, "reps": 5, "weight": 100.0}, {"exercise": "Prensa", "set": 1, "reps": 8, "weight": 170.0}, {"exercise": "Prensa", "set": 2, "reps": 8, "weight": 170.0}, {"exercise": "Prensa", "set": 3, "reps": 8, "weight": 170.0}], "2026-03-12": [{"exercise": "Press hombros con barra", "set": 1, "reps": 8, "weight": 30.0}, {"exercise": "Press hombros con barra", "set": 2, "reps": 8, "weight": 30.0}, {"exercise": "Press hombros con barra", "set": 3, "reps": 8, "weight": 30.0}, {"exercise": "Press hombros con barra", "set": 4, "reps": 8, "weight": 30.0}, {"exercise": "Putada", "set": 1, "reps": 10, "weight": 3.0}, {"exercise": "Putada", "set": 2, "reps": 10, "weight": 3.0}, {"exercise": "Putada", "set": 3, "reps": 10, "weight": 3.0}, {"exercise": "P\u00e1jaros / Polea", "set": 1, "reps": 12, "weight": 6.0}, {"exercise": "P\u00e1jaros / Polea", "set": 2, "reps": 12, "weight": 6.0}, {"exercise": "P\u00e1jaros / Polea", "set": 3, "reps": 12, "weight": 6.0}, {"exercise": "P\u00e1jaros / Polea", "set": 4, "reps": 12, "weight": 6.0}, {"exercise": "Curl b\u00edceps barra", "set": 1, "reps": 10, "weight": 30.0}, {"exercise": "Curl b\u00edceps barra", "set": 2, "reps": 10, "weight": 30.0}, {"exercise": "Curl b\u00edceps barra", "set": 3, "reps": 10, "weight": 30.0}, {"exercise": "Curl martillo", "set": 1, "reps": 12, "weight": 16.0}, {"exercise": "Curl martillo", "set": 2, "reps": 12, "weight": 16.0}, {"exercise": "Curl martillo", "set": 3, "reps": 12, "weight": 16.0}, {"exercise": "Extensi\u00f3n tr\u00edceps polea", "set": 1, "reps": 12, "weight": 15.0}, {"exercise": "Extensi\u00f3n tr\u00edceps polea", "set": 2, "reps": 12, "weight": 15.0}, {"exercise": "Extensi\u00f3n tr\u00edceps polea", "set": 3, "reps": 12, "weight": 15.0}], "2026-03-16": [{"exercise": "Press banca", "set": 1, "reps": 5, "weight": 74.0}, {"exercise": "Press banca", "set": 2, "reps": 5, "weight": 74.0}, {"exercise": "Press banca", "set": 3, "reps": 5, "weight": 74.0}, {"exercise": "Press banca", "set": 4, "reps": 5, "weight": 74.0}, {"exercise": "Press banca", "set": 5, "reps": 5, "weight": 74.0}, {"exercise": "Press militar mancuernas", "set": 1, "reps": 6, "weight": 22.0}, {"exercise": "Press militar mancuernas", "set": 2, "reps": 6, "weight": 22.0}, {"exercise": "Press militar mancuernas", "set": 3, "reps": 6, "weight": 22.0}, {"exercise": "Press militar mancuernas", "set": 4, "reps": 6, "weight": 22.0}, {"exercise": "Remo mancuernas", "set": 1, "reps": 6, "weight": 24.0}, {"exercise": "Remo mancuernas", "set": 2, "reps": 6, "weight": 24.0}, {"exercise": "Remo mancuernas", "set": 3, "reps": 6, "weight": 24.0}, {"exercise": "Press cerrado", "set": 1, "reps": 8, "weight": 22.0}, {"exercise": "Press cerrado", "set": 2, "reps": 8, "weight": 22.0}, {"exercise": "Press cerrado", "set": 3, "reps": 8, "weight": 22.0}, {"exercise": "Elevaciones laterales", "set": 1, "reps": 12, "weight": 8.0}, {"exercise": "Elevaciones laterales", "set": 2, "reps": 12, "weight": 8.0}, {"exercise": "Elevaciones laterales", "set": 3, "reps": 12, "weight": 8.0}], "2026-03-17": [{"exercise": "Sentadilla", "set": 1, "reps": 5, "weight": 95.0}, {"exercise": "Sentadilla", "set": 2, "reps": 5, "weight": 95.0}, {"exercise": "Sentadilla", "set": 3, "reps": 5, "weight": 95.0}, {"exercise": "Sentadilla", "set": 4, "reps": 5, "weight": 100.0}, {"exercise": "Sentadilla", "set": 5, "reps": 5, "weight": 100.0}, {"exercise": "Prensa", "set": 1, "reps": 8, "weight": 170.0}, {"exercise": "Prensa", "set": 2, "reps": 8, "weight": 170.0}, {"exercise": "Prensa", "set": 3, "reps": 8, "weight": 180.0}, {"exercise": "Zancadas", "set": 1, "reps": 8, "weight": 14.0}, {"exercise": "Zancadas", "set": 2, "reps": 8, "weight": 14.0}, {"exercise": "Zancadas", "set": 3, "reps": 8, "weight": 14.0}, {"exercise": "Zancadas", "set": 4, "reps": 8, "weight": 14.0}, {"exercise": "Curl femoral", "set": 1, "reps": 10, "weight": 60.0}, {"exercise": "Curl femoral", "set": 2, "reps": 10, "weight": 60.0}, {"exercise": "Curl femoral", "set": 3, "reps": 10, "weight": 60.0}], "2026-03-18": [{"exercise": "Press hombros con barra", "set": 1, "reps": 8, "weight": 30.0}, {"exercise": "Press hombros con barra", "set": 2, "reps": 8, "weight": 30.0}, {"exercise": "Press hombros con barra", "set": 3, "reps": 8, "weight": 30.0}, {"exercise": "Press hombros con barra", "set": 4, "reps": 8, "weight": 30.0}, {"exercise": "M\u00e1quina de hombros", "set": 1, "reps": 10, "weight": 70.0}, {"exercise": "M\u00e1quina de hombros", "set": 2, "reps": 10, "weight": 70.0}, {"exercise": "M\u00e1quina de hombros", "set": 3, "reps": 10, "weight": 70.0}, {"exercise": "P\u00e1jaros / Polea", "set": 1, "reps": 12, "weight": 6.0}, {"exercise": "P\u00e1jaros / Polea", "set": 2, "reps": 12, "weight": 6.0}, {"exercise": "P\u00e1jaros / Polea", "set": 3, "reps": 12, "weight": 6.0}, {"exercise": "P\u00e1jaros / Polea", "set": 4, "reps": 12, "weight": 6.0}, {"exercise": "Curl b\u00edceps barra", "set": 1, "reps": 10, "weight": 30.0}, {"exercise": "Curl b\u00edceps barra", "set": 2, "reps": 10, "weight": 30.0}, {"exercise": "Curl b\u00edceps barra", "set": 3, "reps": 10, "weight": 30.0}, {"exercise": "Curl martillo", "set": 1, "reps": 12, "weight": 18.0}, {"exercise": "Curl martillo", "set": 2, "reps": 12, "weight": 18.0}, {"exercise": "Curl martillo", "set": 3, "reps": 12, "weight": 18.0}, {"exercise": "Press franc\u00e9s", "set": 1, "reps": 12, "weight": 20.0}, {"exercise": "Press franc\u00e9s", "set": 2, "reps": 12, "weight": 20.0}, {"exercise": "Press franc\u00e9s", "set": 3, "reps": 12, "weight": 20.0}], "2026-03-23": [{"exercise": "Press banca", "set": 1, "reps": 3, "weight": 80.0}, {"exercise": "Press banca", "set": 2, "reps": 3, "weight": 80.0}, {"exercise": "Press banca", "set": 3, "reps": 3, "weight": 80.0}, {"exercise": "Press banca", "set": 4, "reps": 5, "weight": 80.0}, {"exercise": "Press banca", "set": 5, "reps": 5, "weight": 80.0}], "2026-03-24": [{"exercise": "Prensa", "set": 1, "reps": 12, "weight": 200.0}, {"exercise": "Prensa", "set": 2, "reps": 12, "weight": 200.0}, {"exercise": "Prensa", "set": 3, "reps": 12, "weight": 200.0}, {"exercise": "Prensa", "set": 4, "reps": 12, "weight": 200.0}, {"exercise": "Zancadas", "set": 1, "reps": 8, "weight": 16.0}, {"exercise": "Zancadas", "set": 2, "reps": 8, "weight": 16.0}, {"exercise": "Zancadas", "set": 3, "reps": 8, "weight": 16.0}, {"exercise": "Zancadas", "set": 4, "reps": 8, "weight": 16.0}], "2026-03-26": [{"exercise": "Jal\u00f3n", "set": 1, "reps": 12, "weight": 60.0}, {"exercise": "Jal\u00f3n", "set": 2, "reps": 12, "weight": 60.0}, {"exercise": "Jal\u00f3n", "set": 3, "reps": 12, "weight": 60.0}, {"exercise": "Jal\u00f3n", "set": 4, "reps": 12, "weight": 60.0}, {"exercise": "Remo Polea", "set": 1, "reps": 12, "weight": 60.0}, {"exercise": "Remo Polea", "set": 2, "reps": 12, "weight": 60.0}, {"exercise": "Remo Polea", "set": 3, "reps": 12, "weight": 60.0}, {"exercise": "Press inclinado", "set": 1, "reps": 12, "weight": 22.0}, {"exercise": "Press inclinado", "set": 2, "reps": 12, "weight": 22.0}, {"exercise": "Press inclinado", "set": 3, "reps": 12, "weight": 22.0}, {"exercise": "Aperturas", "set": 1, "reps": 15, "weight": 8.0}, {"exercise": "Aperturas", "set": 2, "reps": 15, "weight": 8.0}, {"exercise": "Aperturas", "set": 3, "reps": 15, "weight": 8.0}, {"exercise": "Elevaciones Laterales", "set": 1, "reps": 15, "weight": 8.0}, {"exercise": "Elevaciones Laterales", "set": 2, "reps": 15, "weight": 8.0}, {"exercise": "Elevaciones Laterales", "set": 3, "reps": 15, "weight": 8.0}, {"exercise": "Face pull", "set": 1, "reps": 15, "weight": 15.0}, {"exercise": "Face pull", "set": 2, "reps": 15, "weight": 15.0}, {"exercise": "Face pull", "set": 3, "reps": 15, "weight": 15.0}], "2026-03-30": [{"exercise": "Press banca", "set": 1, "reps": 5, "weight": 76.0}, {"exercise": "Press banca", "set": 2, "reps": 5, "weight": 76.0}, {"exercise": "Press banca", "set": 3, "reps": 5, "weight": 76.0}, {"exercise": "Press banca", "set": 4, "reps": 5, "weight": 76.0}, {"exercise": "Press banca", "set": 5, "reps": 5, "weight": 76.0}, {"exercise": "Aperturas mancuernas", "set": 1, "reps": 12, "weight": 10.0}, {"exercise": "Aperturas mancuernas", "set": 2, "reps": 12, "weight": 10.0}, {"exercise": "Aperturas mancuernas", "set": 3, "reps": 12, "weight": 10.0}, {"exercise": "Jal\u00f3n al pecho", "set": 1, "reps": 8, "weight": 60.0}, {"exercise": "Jal\u00f3n al pecho", "set": 2, "reps": 8, "weight": 60.0}, {"exercise": "Jal\u00f3n al pecho", "set": 3, "reps": 8, "weight": 60.0}, {"exercise": "Jal\u00f3n al pecho", "set": 4, "reps": 8, "weight": 60.0}], "2026-04-13": [{"exercise": "Press banca", "set": 1, "reps": 16, "weight": 58.0}, {"exercise": "Press banca", "set": 2, "reps": 16, "weight": 58.0}, {"exercise": "Press banca", "set": 3, "reps": 16, "weight": 58.0}, {"exercise": "Press banca", "set": 4, "reps": 16, "weight": 58.0}, {"exercise": "Press inclinado", "set": 1, "reps": 12, "weight": 50.0}, {"exercise": "Press inclinado", "set": 2, "reps": 12, "weight": 50.0}, {"exercise": "Press inclinado", "set": 3, "reps": 12, "weight": 50.0}, {"exercise": "Press inclinado", "set": 4, "reps": 12, "weight": 50.0}, {"exercise": "Press cerrado", "set": 1, "reps": 8, "weight": 18.0}, {"exercise": "Press cerrado", "set": 2, "reps": 8, "weight": 18.0}, {"exercise": "Press cerrado", "set": 3, "reps": 8, "weight": 18.0}, {"exercise": "Press cerrado", "set": 4, "reps": 8, "weight": 18.0}, {"exercise": "Face pull", "set": 4, "reps": 12, "weight": 20.0}], "2026-04-14": [{"exercise": "Zancadas", "set": 1, "reps": 16, "weight": 14.0}, {"exercise": "Zancadas", "set": 2, "reps": 16, "weight": 14.0}, {"exercise": "Zancadas", "set": 3, "reps": 16, "weight": 14.0}, {"exercise": "Zancadas", "set": 4, "reps": 16, "weight": 14.0}, {"exercise": "Zancadas", "set": 5, "reps": 16, "weight": 14.0}, {"exercise": "Zancadas", "set": 6, "reps": 16, "weight": 14.0}, {"exercise": "Prensa a una pierna", "set": 1, "reps": 12, "weight": 80.0}, {"exercise": "Prensa a una pierna", "set": 2, "reps": 12, "weight": 80.0}, {"exercise": "Prensa a una pierna", "set": 3, "reps": 12, "weight": 80.0}, {"exercise": "Curl femoral", "set": 1, "reps": 12, "weight": 50.0}, {"exercise": "Curl femoral", "set": 2, "reps": 12, "weight": 50.0}, {"exercise": "Curl femoral", "set": 3, "reps": 12, "weight": 50.0}, {"exercise": "Curl femoral", "set": 4, "reps": 12, "weight": 50.0}]};
         const prData = [{"exercise": "Prensa", "real_pr_weight": 200.0, "real_pr_reps": 12, "real_pr_date": "2026-03-24", "est_1rm": 280.0}, {"exercise": "Sentadilla", "real_pr_weight": 100.0, "real_pr_reps": 5, "real_pr_date": "2026-03-11", "est_1rm": 116.7}, {"exercise": "Prensa a una pierna", "real_pr_weight": 80.0, "real_pr_reps": 12, "real_pr_date": "2026-04-14", "est_1rm": 112.0}, {"exercise": "Press banca", "real_pr_weight": 80.0, "real_pr_reps": 3, "real_pr_date": "2026-03-23", "est_1rm": 93.3}, {"exercise": "M\u00e1quina de hombros", "real_pr_weight": 70.0, "real_pr_reps": 10, "real_pr_date": "2026-03-18", "est_1rm": 93.3}, {"exercise": "Curl femoral", "real_pr_weight": 60.0, "real_pr_reps": 10, "real_pr_date": "2026-03-17", "est_1rm": 80.0}, {"exercise": "Jal\u00f3n", "real_pr_weight": 60.0, "real_pr_reps": 12, "real_pr_date": "2026-03-26", "est_1rm": 84.0}, {"exercise": "Jal\u00f3n al pecho", "real_pr_weight": 60.0, "real_pr_reps": 8, "real_pr_date": "2026-03-30", "est_1rm": 76.0}, {"exercise": "Remo Polea", "real_pr_weight": 60.0, "real_pr_reps": 12, "real_pr_date": "2026-03-26", "est_1rm": 84.0}, {"exercise": "Press inclinado", "real_pr_weight": 50.0, "real_pr_reps": 12, "real_pr_date": "2026-04-13", "est_1rm": 70.0}, {"exercise": "Curl b\u00edceps barra", "real_pr_weight": 30.0, "real_pr_reps": 10, "real_pr_date": "2026-03-12", "est_1rm": 40.0}, {"exercise": "Press hombros con barra", "real_pr_weight": 30.0, "real_pr_reps": 8, "real_pr_date": "2026-03-12", "est_1rm": 38.0}, {"exercise": "Remo mancuernas", "real_pr_weight": 24.0, "real_pr_reps": 6, "real_pr_date": "2026-03-09", "est_1rm": 28.8}, {"exercise": "Press cerrado", "real_pr_weight": 22.0, "real_pr_reps": 8, "real_pr_date": "2026-03-09", "est_1rm": 27.9}, {"exercise": "Press militar mancuernas", "real_pr_weight": 22.0, "real_pr_reps": 6, "real_pr_date": "2026-03-09", "est_1rm": 26.4}, {"exercise": "Face pull", "real_pr_weight": 20.0, "real_pr_reps": 12, "real_pr_date": "2026-04-13", "est_1rm": 28.0}, {"exercise": "Press franc\u00e9s", "real_pr_weight": 20.0, "real_pr_reps": 12, "real_pr_date": "2026-03-18", "est_1rm": 28.0}, {"exercise": "Curl martillo", "real_pr_weight": 18.0, "real_pr_reps": 12, "real_pr_date": "2026-03-18", "est_1rm": 25.2}, {"exercise": "Zancadas", "real_pr_weight": 16.0, "real_pr_reps": 8, "real_pr_date": "2026-03-24", "est_1rm": 21.5}, {"exercise": "Extensi\u00f3n tr\u00edceps polea", "real_pr_weight": 15.0, "real_pr_reps": 12, "real_pr_date": "2026-03-12", "est_1rm": 21.0}, {"exercise": "Aperturas mancuernas", "real_pr_weight": 10.0, "real_pr_reps": 12, "real_pr_date": "2026-03-30", "est_1rm": 14.0}, {"exercise": "Aperturas", "real_pr_weight": 8.0, "real_pr_reps": 15, "real_pr_date": "2026-03-26", "est_1rm": 12.0}, {"exercise": "Elevaciones Laterales", "real_pr_weight": 8.0, "real_pr_reps": 15, "real_pr_date": "2026-03-26", "est_1rm": 12.0}, {"exercise": "Elevaciones laterales", "real_pr_weight": 8.0, "real_pr_reps": 12, "real_pr_date": "2026-03-09", "est_1rm": 11.2}, {"exercise": "P\u00e1jaros / Polea", "real_pr_weight": 6.0, "real_pr_reps": 12, "real_pr_date": "2026-03-12", "est_1rm": 8.4}, {"exercise": "Putada", "real_pr_weight": 3.0, "real_pr_reps": 10, "real_pr_date": "2026-03-12", "est_1rm": 4.0}];
         
-        // --- TAB LOGIC ---
         function switchTab(tabId) {
             ['tab-graficas', 'tab-calendario', 'tab-records'].forEach(id => {
                 document.getElementById(id).classList.add('hidden');
@@ -134,71 +107,40 @@
             });
             document.getElementById(tabId).classList.remove('hidden');
             document.getElementById('btn-' + tabId).classList.add('active');
-            
-            // Re-render calendar if tab is shown
-            if(tabId === 'tab-calendario' && calendarInstance) {
-                setTimeout(() => calendarInstance.render(), 50);
-            }
+            if(tabId === 'tab-calendario' && calendarInstance) { setTimeout(() => calendarInstance.render(), 50); }
         }
 
-        // --- CALENDAR LOGIC ---
         let calendarInstance;
         document.addEventListener('DOMContentLoaded', function() {
             const calendarEl = document.getElementById('calendar');
-            const routineColors = {
-                'Día 1 - Upper FUERZA': '#3b82f6', 
-                'Día 2 - Lower FUERZA': '#10b981', 
-                'Día 3 - HOMBROS + BRAZOS': '#8b5cf6', 
-                'Día 4 - Upper HIPERTROFIA': '#f59e0b' 
-            };
-            const events = calendarEvents.map(e => ({
-                title: e.title.replace('Día ', 'D'),
-                start: e.date,
-                backgroundColor: routineColors[e.title] || '#6366f1'
-            }));
-            
-            // Use standard view but tweak header for mobile
+            const routineColors = { 'Día 1 - Upper FUERZA': '#3b82f6', 'Día 2 - Lower FUERZA': '#10b981', 'Día 3 - HOMBROS + BRAZOS': '#8b5cf6', 'Día 4 - Upper HIPERTROFIA': '#f59e0b' };
+            const events = calendarEvents.map(e => ({ title: e.title.replace('Día ', 'D'), start: e.date, backgroundColor: routineColors[e.title] || '#6366f1' }));
             calendarInstance = new FullCalendar.Calendar(calendarEl, {
                 initialView: window.innerWidth < 768 ? 'dayGridMonth' : 'dayGridMonth',
                 headerToolbar: { left: 'prev', center: 'title', right: 'next' },
-                events: events,
-                height: 'auto',
-                firstDay: 1, 
-                locale: 'es',
-                eventClick: function(info) {
-                    openModal(info.event.startStr, info.event.title);
-                }
+                events: events, height: 'auto', firstDay: 1, locale: 'es',
+                eventClick: function(info) { openModal(info.event.startStr, info.event.title); }
             });
         });
 
-        // --- MODAL LOGIC ---
         function openModal(dateStr, routineName) {
             document.getElementById('modalDateTitle').innerText = dateStr.substring(5) + " | " + routineName;
             const content = document.getElementById('modalContent');
             content.innerHTML = '';
-            
             const logs = detailsData[dateStr];
             if (!logs || logs.length === 0) {
                 content.innerHTML = '<p class="text-slate-400 italic text-center py-4">No hay detalles registrados.</p>';
             } else {
                 const grouped = {};
-                logs.forEach(log => {
-                    if (!grouped[log.exercise]) grouped[log.exercise] = [];
-                    grouped[log.exercise].push(log);
-                });
-                
+                logs.forEach(log => { if (!grouped[log.exercise]) grouped[log.exercise] = []; grouped[log.exercise].push(log); });
                 for (const [exercise, sets] of Object.entries(grouped)) {
                     let html = `<div class="bg-zinc-800/30 p-3 rounded-xl border border-zinc-700/50">
-                                    <h4 class="font-bold text-indigo-400 mb-2 text-sm flex items-center gap-2">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>${exercise}
-                                    </h4>
+                                    <h4 class="font-bold text-indigo-400 mb-2 text-sm flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>${exercise}</h4>
                                     <div class="space-y-1">`;
                     sets.sort((a,b) => a.set - b.set).forEach(s => {
                         html += `<div class="flex justify-between items-center text-[11px] text-slate-300 bg-zinc-900/60 px-3 py-1.5 rounded-lg">
                                     <span class="text-slate-500">Serie ${s.set}</span>
-                                    <span class="font-mono font-bold text-white">
-                                        ${s.reps} <span class="text-slate-500 font-normal">x</span> ${s.weight} kg
-                                    </span>
+                                    <span class="font-mono font-bold text-white">${s.reps} <span class="text-slate-500 font-normal">x</span> ${s.weight} kg</span>
                                  </div>`;
                     });
                     html += `</div></div>`;
@@ -209,12 +151,8 @@
             document.body.style.overflow = 'hidden'; 
         }
 
-        function closeModal() {
-            document.getElementById('dayModal').classList.add('hidden');
-            document.body.style.overflow = '';
-        }
+        function closeModal() { document.getElementById('dayModal').classList.add('hidden'); document.body.style.overflow = ''; }
 
-        // --- DATA & COLORS ---
         const exercises = [...new Set(chartData.map(d => d.exercise))].sort();
         const defaultSelected = ['Press banca', 'Sentadilla', 'Prensa'];
         let selectedExercises = new Set(exercises.filter(e => defaultSelected.includes(e)));
@@ -224,7 +162,6 @@
         const colorMap = {};
         exercises.forEach((ex, i) => colorMap[ex] = colors[i % colors.length]);
 
-        // --- FILTERS ---
         const filterContainer = document.getElementById('filter-container');
         function renderFilters() {
             filterContainer.innerHTML = '';
@@ -233,15 +170,12 @@
                 const isActive = selectedExercises.has(ex);
                 const color = colorMap[ex];
                 if (isActive) {
-                    btn.className = "flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-bold border shadow-md transition-transform active:scale-95";
-                    btn.style.backgroundColor = color + '25';
-                    btn.style.borderColor = color;
-                    btn.style.color = color;
+                    btn.className = "flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-bold border shadow-md";
+                    btn.style.backgroundColor = color + '25'; btn.style.borderColor = color; btn.style.color = color;
                 } else {
-                    btn.className = "flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium border bg-zinc-900 border-zinc-800 text-slate-500 transition-colors hover:bg-zinc-800";
+                    btn.className = "flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium border bg-zinc-900 border-zinc-800 text-slate-500 hover:bg-zinc-800";
                 }
-                btn.innerText = ex;
-                btn.onclick = () => toggleExercise(ex);
+                btn.innerText = ex; btn.onclick = () => toggleExercise(ex);
                 filterContainer.appendChild(btn);
             });
         }
@@ -249,12 +183,10 @@
         function toggleExercise(ex) {
             if (selectedExercises.has(ex)) selectedExercises.delete(ex);
             else selectedExercises.add(ex);
-            renderFilters();
-            updateCharts();
+            renderFilters(); updateCharts();
         }
         function clearAll() { selectedExercises.clear(); renderFilters(); updateCharts(); }
 
-        // --- CHARTS (MAIN & VOLUME) ---
         Chart.defaults.color = '#71717a';
         Chart.defaults.font.family = 'Outfit';
         let lineChart, volumeChart;
@@ -267,61 +199,46 @@
             selectedExercises.forEach(ex => {
                 const exData = chartData.filter(d => d.exercise === ex);
                 
-                // Line Chart (Weight)
                 const weightPoints = dates.map(d => {
                     const point = exData.find(x => x.date === d);
-                    // Pass the whole object to access 'reps' in tooltip
-                    return point ? { x: d.substring(5), y: point.weight, reps: point.reps } : null;
+                    return point ? point.weight : null;
                 });
 
                 lineDatasets.push({
-                    label: ex,
-                    data: weightPoints,
-                    borderColor: colorMap[ex],
-                    backgroundColor: colorMap[ex],
-                    borderWidth: 3,
-                    pointRadius: 4,
-                    pointHoverRadius: 8,
-                    pointBackgroundColor: '#09090b',
-                    pointBorderWidth: 2,
-                    spanGaps: true,
-                    tension: 0.3
+                    label: ex, data: weightPoints,
+                    borderColor: colorMap[ex], backgroundColor: colorMap[ex], borderWidth: 3, pointRadius: 4,
+                    pointHoverRadius: 8, pointBackgroundColor: '#09090b', pointBorderWidth: 2, spanGaps: true, tension: 0.3
                 });
 
-                // Bar Chart (Volume)
                 const volPoints = dates.map(d => {
                     const point = exData.find(x => x.date === d);
                     return point ? point.volume : 0;
                 });
 
                 volumeDatasets.push({
-                    label: ex,
-                    data: volPoints,
-                    backgroundColor: colorMap[ex] + 'CC', // 80% opacity
-                    borderRadius: 4
+                    label: ex, data: volPoints, backgroundColor: colorMap[ex] + 'CC', borderRadius: 4
                 });
             });
 
             if (lineChart) lineChart.destroy();
             if (volumeChart) volumeChart.destroy();
 
-            // 1. LINE CHART (WEIGHT + REPS TOOLTIP)
             lineChart = new Chart(document.getElementById('progressChart').getContext('2d'), {
                 type: 'line',
-                data: { datasets: lineDatasets },
+                data: { labels: dates.map(d => d.substring(5)), datasets: lineDatasets },
                 options: {
                     responsive: true, maintainAspectRatio: false,
                     plugins: {
                         legend: { display: false },
                         tooltip: {
-                            backgroundColor: 'rgba(24, 24, 27, 0.95)',
-                            titleFont: { size: 11 },
-                            bodyFont: { size: 12, weight: 'bold' },
+                            backgroundColor: 'rgba(24, 24, 27, 0.95)', titleFont: { size: 11 }, bodyFont: { size: 12, weight: 'bold' },
                             padding: 10, borderColor: 'rgba(63, 63, 70, 0.8)', borderWidth: 1, cornerRadius: 8,
                             callbacks: { 
-                                // THIS IS THE MAGIC: Shows Weight + Reps
                                 label: (context) => {
-                                    const reps = context.raw.reps;
+                                    const dateLabel = dates[context.dataIndex];
+                                    const exLabel = context.dataset.label;
+                                    const point = chartData.find(d => d.date === dateLabel && d.exercise === exLabel);
+                                    const reps = point ? point.reps : "?";
                                     return ` ${context.dataset.label}: ${context.parsed.y} kg (x${reps} reps)`;
                                 }
                             }
@@ -329,12 +246,11 @@
                     },
                     scales: {
                         y: { grid: { color: 'rgba(255, 255, 255, 0.03)' }, ticks: { font: { size: 10 } } },
-                        x: { grid: { display: false }, type: 'category', labels: dates.map(d => d.substring(5)), ticks: { font: { size: 10 } } }
+                        x: { grid: { display: false }, ticks: { font: { size: 10 } } }
                     }
                 }
             });
 
-            // 2. BAR CHART (TOTAL VOLUME)
             volumeChart = new Chart(document.getElementById('volumeChart').getContext('2d'), {
                 type: 'bar',
                 data: { labels: dates.map(d => d.substring(5)), datasets: volumeDatasets },
@@ -342,18 +258,16 @@
                     responsive: true, maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: {
-                        y: { grid: { display: false }, ticks: { display: false } }, // Hide volume Y axis to save space
+                        y: { grid: { display: false }, ticks: { display: false } },
                         x: { grid: { display: false }, ticks: { font: { size: 9 } } }
                     }
                 }
             });
         }
 
-        // --- PR CARDS (REPLACING TABLE) ---
         function renderPRCards() {
             const container = document.getElementById('pr-cards-container');
             container.innerHTML = '';
-
             prData.forEach(d => {
                 const color = colorMap[d.exercise] || '#3b82f6';
                 const html = `
@@ -369,13 +283,11 @@
                         <div class="mt-2 pt-2 border-t border-zinc-800/50 text-[10px] text-slate-500">
                             1RM Teórico Estimado: <span class="text-purple-400 font-bold">${d.est_1rm} kg</span>
                         </div>
-                    </div>
-                `;
+                    </div>`;
                 container.innerHTML += html;
             });
         }
 
-        // Init
         renderFilters();
         updateCharts();
         renderPRCards();
